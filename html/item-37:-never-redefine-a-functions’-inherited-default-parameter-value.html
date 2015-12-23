@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="518"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-02-28 17:39:18 +0000"/><meta name="latitude" content="46.62858276367184"/><meta name="longitude" content="13.82443237304688"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-07-27 19:31:48 +0000"/><title>Item 37: Never redefine a functions’ inherited default parameter value.</title></head><body>
+
+	<div>
+
+		<div><span style="font-family: 'Helvetica Neue';">// base class</span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">virtual void foo(int x = 4);</span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">here, the <b>virtual</b> will make a derived version of this function override it if called from a base class pointer. This is called <b>dynamic</b> or <b>late binding.</b> However, function parameters are bound <b>statically</b> or <b>early</b>, so it will not be overriden when called from a base class pointer.</span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">// derived class</span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">virtual void foo(int x = 123) override;</span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">basePointerToDerived-&gt;foo(); // calls derived foo, but with default parameter <b> x = 4</b></span></div>
+
+	</div>
+
+	<div><br/></div>
+
+
+
+</body></html>

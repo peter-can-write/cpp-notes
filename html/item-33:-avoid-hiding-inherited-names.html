@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="518"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-02-28 17:35:52 +0000"/><meta name="latitude" content="46.62858276367184"/><meta name="longitude" content="13.82443237304688"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-07-04 18:34:30 +0000"/><title>Item 33: Avoid hiding inherited names.</title></head><body>
+<div>
+<div><span style="font-family: 'Helvetica Neue';">When a base class has overloads for a function and  you redefine that function in a derived class, only the overload that you redefine will be visible, all other overloads will be hidden.</span></div>
+</div>
+<div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">class Base</span></div>
+<div><span style="font-family: 'Helvetica Neue';">{</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">public:</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">     virtual void foo();</span></div>
+<div><span style="font-family: 'Helvetica Neue';">     virtual void foo(int x);</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">};</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">class Derived : public Base</span></div>
+<div><span style="font-family: 'Helvetica Neue';">{</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">public:</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">     void foo();</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">};</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">Derived d;</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">d.foo(); // works, calls Derived::foo</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">d.foo(5); // fails, foo(int x) is hidden by Derived</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">To make all versions visible, use a <b>using</b> statement:</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">class Derived : public Base</span></div>
+<div><span style="font-family: 'Helvetica Neue';">{</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">public:</span></div>
+</div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">     <font color="#FF2600">using Base::foo;</font></span></div>
+<div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">     void foo();</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">};</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">Now all overloads of Base::foo() are visible:</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">Derived d.</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">d.foo(); // works, calls Derived::foo</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+</div>
+<div>
+<div><span style="font-family: 'Helvetica Neue';">d.foo(5); // now works too, calls Base::foo(int x)</span></div>
+<div><br/></div>
+</div>
+<div><br/></div>
+</body></html>

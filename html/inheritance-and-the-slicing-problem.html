@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="518"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-02-28 17:22:14 +0000"/><meta name="latitude" content="46.62858276367184"/><meta name="longitude" content="13.82443237304688"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-02-28 17:22:36 +0000"/><title>Inheritance and the slicing problem</title></head><body>
+<div><span style="font-family: 'Helvetica Neue';">When passing an object of derived type to a function that takes an object of base type by value, the function will intialize the base type parameter only with the parts of the derived type that are also part of the base class (only the members that actually belong to the base class).</span></div>
+<div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">E.g.:</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">// A base class with a virtual function</span></div>
+<div><span style="font-family: 'Helvetica Neue';">class Base</span></div>
+<div><span style="font-family: 'Helvetica Neue';">{</span></div>
+<div><span style="font-family: 'Helvetica Neue';">public:</span></div>
+<div><span style="font-family: 'Helvetica Neue';">     </span></div>
+<div><span style="font-family: 'Helvetica Neue';">     virtual void something() {std::cout &lt;&lt; “Base”; }</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">int a;</span></div>
+<div><span style="font-family: 'Helvetica Neue';">};</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">// Derived class</span></div>
+<div><span style="font-family: 'Helvetica Neue';">class Derived : public Base</span></div>
+<div><span style="font-family: 'Helvetica Neue';">{</span></div>
+<div><span style="font-family: 'Helvetica Neue';">public:</span></div>
+<div><span style="font-family: 'Helvetica Neue';">     void something() { std::cout &lt;&lt; “Derived”; }</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">int b;</span></div>
+<div><span style="font-family: 'Helvetica Neue';">};</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">Now, given a function that takes a Base object by value, passing it an object</span></div>
+<div><span style="font-family: 'Helvetica Neue';">of Derived will “slice” that Derived object, constructing the “base” parameter</span></div>
+<div><span style="font-family: 'Helvetica Neue';">only with the members that are part of Base. Also, calling a virtual function</span></div>
+<div><span style="font-family: 'Helvetica Neue';">will therefore call the Base’s version. </span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">void foo(Base base)</span></div>
+<div><span style="font-family: 'Helvetica Neue';">{</span></div>
+<div><span style="font-family: 'Helvetica Neue';">     base.b; // won’t work - base has no member “b"</span></div>
+<div><span style="font-family: 'Helvetica Neue';">     base.something(); // will print “Base"</span></div>
+<div><span style="font-family: 'Helvetica Neue';">}</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">I mean, it does make sense, since Polymorphism only works with pointers or their auto-dereferenced brothers, references.</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">// What you’d want:</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">void foo(Base* base);</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">// Or:</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">void foo(const Base&amp; base);</span></div>
+</div>
+<div><br/></div>
+</body></html>

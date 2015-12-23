@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="518"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-02-28 17:40:20 +0000"/><meta name="latitude" content="46.62858276367184"/><meta name="longitude" content="13.82443237304688"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-07-06 14:20:46 +0000"/><title>Item 41: Understand implicit interfaces and compile-time polymorphism.</title></head><body>
+
+	<div>
+
+		<div><span style="font-family: 'Helvetica Neue';">Non-template object are said to have an explicit interface (an object has an explicitly set, defined interface from its class) and run-time polymorphism, because the dynamic binding and polymorphism happens at run-time. </span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">Template types (the T in template&lt;class T&gt;) have an implicit interface, because it is implicitly determined by the functions and operations that are supposed to be performed on it, and compile-time polymorphism, because template functions, when called, and template classes are instantiated for a specific type at compile-time.</span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">// Implicit interfaces</span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">template&lt;class T&gt;</span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">void foo(T t)</span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">{</span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">     t.bar(); // The interface is defined implicitly. A T object’s interface must have a bar() method.</span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">}</span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">// Compile-time polymorphism</span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">Bar object;</span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">foo(object);</span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">// Compiler created this function at compile-time</span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">void foo(Bar t)</span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">{</span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">     t.bar();</span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">}</span></div>
+
+		<div><br/></div>
+
+	</div>
+
+	<div><br/></div>
+
+
+
+</body></html>

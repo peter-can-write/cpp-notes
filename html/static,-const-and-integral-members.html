@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="518"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-03-27 20:18:03 +0000"/><meta name="latitude" content="46.62858276367184"/><meta name="longitude" content="13.82443237304688"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-03-27 20:21:03 +0000"/><title>Static, const and integral members</title></head><body>
+<div>Normally, you must define static members of a class outside of its scope:</div>
+<div><br/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">class</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">Foo<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">public</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">:<br/>
+   <br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">static</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">string</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">foo;<br/>
+};<br/>
+<br/></span></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">string</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #4f8187">Foo</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::foo =</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #43d34b">"hehe"</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">;</span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;"><br/></span></span></div>
+<div>However, if the static member is <b>const</b> and <b>int</b>, you can define it inside the scope of the class:</div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;"><br/></span></span></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">class</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">Foo<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">public</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">:<br/>
+   <br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">static</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">foo =</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">5</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">;<br/>
+};</span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;"><br/></span></span></div>
+</body></html>

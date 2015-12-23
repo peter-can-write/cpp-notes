@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="478.9999389648438"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-11-13 18:43:55 +0000"/><meta name="latitude" content="48.25691332723284"/><meta name="longitude" content="11.6550111850429"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-11-13 18:46:09 +0000"/><title>Unicode</title></head><body>
+<div>
+<div style="font-family:monospace; font-size:13px; font-weight:normal"><br/></div>
+</div>
+<ul>
+<li style="font-family:monospace; font-size:13px; font-weight:normal">It can represent all 1,114,112 Unicode characters.</li>
+<li style="font-family:monospace; font-size:13px; font-weight:normal">Most C code that deals with strings on a byte-by-byte basis still works, since UTF-8 is fully compatible with 7-bit ASCII.</li>
+<li style="font-family:monospace; font-size:13px; font-weight:normal">Characters usually require fewer than four bytes.</li>
+<li style="font-family:monospace; font-size:13px; font-weight:normal"><b>String sort order is preserved. In other words, sorting UTF-8 strings per-byte yields the same order as sorting them per-character by logical Unicode value.</b></li>
+<li style="font-family:monospace; font-size:13px; font-weight:normal">A missing or corrupt byte in transmission can only affect a single character—you can always find the start of the sequence for the next character just by scanning a couple bytes.</li>
+<li style="font-family:monospace; font-size:13px; font-weight:normal">There are no byte-order/endianness issues, since UTF-8 data is a byte stream.</li>
+</ul>
+<div style="font-family:monospace; font-size:13px; font-weight:normal"><br/></div>
+<div style="font-family:monospace; font-size:13px; font-weight:normal"><b>Multibyte-string:</b> A string with an encoding that <i>allows</i> more character to be stored with more than one byte.</div>
+<div style="font-family:monospace; font-size:13px; font-weight:normal"><br/></div>
+<div style="font-family:monospace; font-size:13px; font-weight:normal"><b>Wide-character:</b> A string where each character is the same-size (usually 32-bit integer) and represents a unicode code-point.</div>
+<div style="font-family:monospace; font-size:13px; font-weight:normal"><br/></div>
+<div style="font-family:monospace; font-size:13px; font-weight:normal"><br/></div>
+</body></html>

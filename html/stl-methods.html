@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="518"/><meta name="author" content="petergoldsborough110"/><meta name="created" content="2014-02-23 15:11:23 +0000"/><meta name="latitude" content="46.62898915250048"/><meta name="longitude" content="13.82445772988978"/><meta name="updated" content="2015-05-20 09:54:06 +0000"/><title>STL methods</title></head><body style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;">
+<div><span style="font-family: Menlo;"><span style="font-size: 11px;">container&lt;T&gt;::iterator</span></span></div>
+<div><span style="font-family: Menlo;"><span style="font-size: 11px;"><br/></span></span></div>
+<div><span style="font-family: Menlo;"><span style="font-size: 11px;">container&lt;T&gt;::const_iterator</span></span><span style="font-size: 11px;"><br/></span></div>
+<div><span style="font-family: Menlo;"><span style="font-size: 11px;"><br/></span></span></div>
+<div><span style="font-family: Menlo;"><span style="font-size: 11px;">container&lt;T&gt;::reverse_iterator // starts from end, ++ goes backwards</span></span><span style="font-size: 11px;"><br/></span></div>
+<div><span style="font-family: Menlo;"><br/></span></div>
+<div><span style="font-family: Menlo;"><span style="font-size: 11px;">container&lt;T&gt;::size_type</span></span><span style="font-size: 11px;"><br/></span></div>
+<div><span style="font-family: Menlo;"><span style="font-size: 11px;"><br/></span></span></div>
+<div><span style="font-family: Menlo;"><span style="font-size: 11px;"><i>container&lt;T&gt; c;</i></span></span><span style="font-size: 11px;"><br/></span></div>
+<div><span style="font-family: Menlo;"><span style="font-size: 11px;"><br/></span></span></div>
+<div><span style="font-family: Menlo;"><span style="font-size: 11px;">c.begin()</span></span></div>
+<div><span style="font-family: Menlo;"><span style="font-size: 11px;"><br/></span></span></div>
+<div><span style="font-family: Menlo;"><span style="font-size: 11px;">c.end()</span></span></div>
+<div><span style="font-family: Menlo;"><span style="font-size: 11px;"><br/></span></span></div>
+<div><span style="font-family: Menlo;"><span style="font-size: 11px;">c.rbegin() // returns reverse_iterator, end of non-reversed</span></span></div>
+<div><span style="font-family: Menlo;"><span style="font-size: 11px;"><br/></span></span></div>
+<div><span style="font-family: Menlo;"><span style="font-size: 11px;">c.rend()   // start of non-reversed</span></span></div>
+<div><span style="font-family: Menlo;"><span style="font-size: 11px;"><br/></span></span></div>
+<div><span style="font-family: Menlo;"><span style="font-size: 11px;">c.empty() // returns bool</span></span></div>
+<div><span style="font-family: Menlo;"><span style="font-size: 11px;"><br/></span></span></div>
+<div><span style="font-family: Menlo;"><span style="font-size: 11px;">c.insert(pos,start_iter,end_iter)</span></span></div>
+<div><span style="font-family: Menlo;"><span style="font-size: 11px;"><br/></span></span></div>
+<div><span style="font-family: Menlo;"><span style="font-size: 11px;">c.erase(itr)</span></span></div>
+<div><span style="font-family: Menlo;"><span style="font-size: 11px;"><br/></span></span></div>
+<div><span style="font-family: Menlo;"><span style="font-size: 11px;">c.erase(start,end)</span></span></div>
+<div><span style="font-family: Menlo;"><span style="font-size: 11px;"><br/></span></span></div>
+<div><span style="font-family: Menlo;"><span style="font-size: 11px;">container&lt;T&gt;(c2) // copy constructor</span></span><span style="font-size: 11px;"><br/></span></div>
+<div><span style="font-family: Menlo;"><span style="font-size: 11px;"><br/></span></span></div>
+<div><span style="font-family: Menlo;"><span style="font-size: 11px;">container&lt;T&gt;(n)  // allocates memory for n items, if primitive type, all = 0 (value initialized)</span></span><span style="font-size: 11px;"><br/></span></div>
+<div><span style="font-family: Menlo;"><span style="font-size: 11px;"><br/></span></span></div>
+<div><font face="Menlo"><span style="font-size: 11px;">container&lt;T&gt;(n, x) // allocates container with n * </span><span style="font-size: 11px; line-height: 15px;">‘</span><span style="font-size: 11px;">x' items in it</span></font><span style="font-size: 11px;"><br/></span></div>
+<div><span style="font-family: Menlo;"><br/></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">container&lt;T&gt;.insert(pos, begin, end) // inserts the range from begin to end at pos</span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;"><br/></span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">container&lt;T&gt;.assign(begin, end) // sets the (entire) contents of the container to the range from begin to end</span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;"><br/></span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">container&lt;T&gt;.erase(begin, end) // erases the range from begin to end of the container</span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;"><br/></span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;"> container&lt;T&gt;(begin, end) // constructs the container with the contents of the range from begin to end (like assign)</span></span></div>
+<div><span style="font-family: Menlo;"><br/></span></div>
+<div><br/></div>
+</body></html>

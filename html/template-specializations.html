@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="517.458740234375"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-07-17 19:50:24 +0000"/><meta name="latitude" content="46.62853071132728"/><meta name="longitude" content="13.82442412555311"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-07-17 19:53:36 +0000"/><title>Template specializations</title></head><body>
+<div>There is no such thing as a partial template specialization for functions, there are simply overloads.</div>
+<div><br/></div>
+<div>template&lt;typename T&gt; void f(T); // One template function</div>
+<div><br/></div>
+<div>template&lt;typename T&gt; void f(T*); // Not a partial template specialization, just simply an overload</div>
+<div><br/></div>
+<div>Overloads of template functions are called ‘base templates’.</div>
+<div><br/></div>
+<div>template&lt;&gt; void&lt;int&gt; f(int); // full/explicit specialization of function template</div>
+<div><br/></div>
+<div>Don’t fully/explicitly specialize function template, just make a plain old non-template function</div>
+<div><br/></div>
+<div>void f(int); // will be called for an integer, not template functions.</div>
+</body></html>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="518"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-02-28 16:15:32 +0000"/><meta name="latitude" content="46.62858125225571"/><meta name="longitude" content="13.82443214052132"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-05-19 18:11:16 +0000"/><title>Passing multidimensional arrays to functions</title></head><body>
+<div>
+<div><span style="font-family: 'Helvetica Neue';">When passing multidimensional arrays to functions, you have to specify all dimensions except the <b>first</b>. </span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">void foo( int arr [ ] [ 4 ])</span></div>
+<div><span style="font-family: 'Helvetica Neue';">{ }</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">Since it knows the size of the columns, doing arr[2][2] inside the function means</span></div>
+<div><span style="font-family: 'Helvetica Neue';">doing arr[ 2 * 4] [ 2 ].</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">It’s all <b>sequential</b> after all. </span></div>
+<div><br/></div>
+</div>
+<div><br/></div>
+</body></html>

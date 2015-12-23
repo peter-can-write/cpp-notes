@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-09-01 12:38:25 +0000"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-09-01 13:42:53 +0000"/><title>inserters</title></head><body>
+<div>Standard (STL) algorithms that copy elements into another range expect that that other range already holds initialized and dereferenceable values. E.g. for</div>
+<div><br/></div>
+<div>std::copy(source_begin, source_end, destination_begin)</div>
+<div><br/></div>
+<div>It should be that there is space for std::distance(source_begin, source_end) elements in the destination, starting at destination_begin, since any such algorithm will be of the lines of:</div>
+<div><br/></div>
+<div>template&lt;typename I, typename J&gt;</div>
+<div>void algorithm(I begin, I end, J destination)</div>
+<div>{</div>
+<div>     for ( ; begin != end; ++begin)</div>
+<div>     {</div>
+<div>          /* something */</div>
+<div>          *destination++ = *begin;</div>
+<div>          /* something */</div>
+<div>     }</div>
+<div>}</div>
+<div><br/></div>
+<div>I.e. destination will be incremented for each value between begin and end. If that space is not valid, initialized memory, behavior is undefined, but horrible either way.</div>
+<div><br/></div>
+<div>There are generally two solutions:</div>
+<div><br/></div>
+<div>1) Resize before, if not enough already space (cost of default initialization)</div>
+<div>2) Reserve space, then use an <b>inserter</b></div>
+<div><b><br/></b></div>
+<div>There are three types of inserters:</div>
+<div><br/></div>
+<div>std::back_inserter(container): will call push_back on the container to insert a new value</div>
+<div>std::front_inserter(container): will call push_front on the container to insert a new value (for std::list, and std::deque)</div>
+<div>std::inserter(container, iterator to that container), will insert continuously at that position</div>
+<div><br/></div>
+<div>std::front_inserter would insert at the front always, thus if you call it sequentially on a range, the values will be in reverse order. To undo this, iterate not from begin() to end(), but from rbegin() to rend().</div>
+<div><br/></div>
+<div><br/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">std::vector&lt;std::size_t&gt; source = {</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">1</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">2</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">3</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">4</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">5</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">};<br/>
+<br/>
+std::vector&lt;std::size_t&gt; a, b = {</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">10</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">11</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">12</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">};<br/>
+<br/>
+std::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">list</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">size_t</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&gt; c;<br/>
+<br/>
+std::copy(source.begin(), source.end(), std::back_inserter(a));<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// 1 2 3 4 5</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">for</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">auto</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&amp; i : a) print(i,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #43d34b">" "</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">);<br/>
+<br/>
+println();<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #31595d">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::copy(source.begin(), source.end(), std::inserter(b, b.begin() +</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">1</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">));<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// 10 1 2 3 4 5 11 12 (before always 11)</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">for</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">auto</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&amp; i : b) print(i,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #43d34b">" "</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">);<br/>
+<br/>
+println();<br/>
+<br/>
+std::copy(source.begin(), source.end(), std::front_inserter(c));<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// 5 4 3 2 1 (reverse order)</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">for</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">auto</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&amp; i : c) print(i,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #43d34b">" "</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">);<br/>
+<br/>
+println();<br/>
+<br/>
+c.clear();<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// Do note the rbegin() and rend()</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+std::copy(source.rbegin(), source.rend(), std::front_inserter(c));<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// 1 2 3 4 5 (normal order again, equivalent to back_inserter)</span></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">for</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">auto</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&amp; i : c) print(i,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #43d34b">" "</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">);</span></div>
+</body></html>

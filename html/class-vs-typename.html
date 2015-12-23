@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="519.0587158203125"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-08-06 11:58:49 +0000"/><meta name="latitude" content="46.62872478456952"/><meta name="longitude" content="13.82442843421737"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-08-06 12:02:00 +0000"/><title>class vs typename</title></head><body>
+<div>for template parameters, class and typename are more or less equivalent:</div>
+<div><br/></div>
+<div>template&lt;typename T&gt; void foo(){} &lt;==&gt; template&lt;class T&gt; void foo(){}</div>
+<div><br/></div>
+<div>However, for <i>template template parameters</i> you must use class:</div>
+<div><br/></div>
+<div>template&lt;typename T, typename Alloc, template&lt;typename,typename&gt; class Container&gt;</div>
+<div>void foo(Container&lt;T, Alloc&gt;) {}</div>
+<div><br/></div>
+<div>Using class hints that the type will be of user-defined class type on which certain operations can be performed, i.e. for which you can call methods. So use class where you expect a user-defined class-type and use typename where also primitive types such as int or char are allowed, or for functions (predicates).</div>
+</body></html>

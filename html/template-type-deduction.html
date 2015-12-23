@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="keywords" content="C++ C++11, C++14, templates"/><meta name="created" content="2015-10-17 13:24:43 +0000"/><meta name="updated" content="2015-12-19 00:00:12 +0000"/><title>Template Type Deduction</title></head><body>
+<div><br/></div>
+<div style="font-weight: bold; font-size: 23px;">Normal Arguments</div>
+<p>When dealing with template-type deduction and non-array and non-function types, i.e. normal data types such as <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">int</code> or <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">std::string</code>, there are three cases for template type deduction. In all cases, consider the following function signature:</p>
+<pre title="C++" style="color: #000000; font-family: monospace,monospace; font-size: 0.9em; white-space: pre-wrap; word-wrap: break-word; border: 1px solid #cccccc; border-radius: 3px; overflow: auto; padding: 6px 10px; margin-bottom: 10px;background-color:#f8f8f8;">
+<code style="color: black; font-family: monospace,monospace; font-size: 0.9em;"><span style="color: #000000; font-weight: bold">template&lt;typename</span> T<span style="color: #000000; font-weight: bold">&gt;</span>
+<span style="color: #445588; font-weight: bold">void</span> f(Type parameter)
+{
+    <span style="color: #999988; font-style: italic">/* ... */</span>
+}
+
+f(expression)
+</code>
+</pre>
+<p>where <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">f</code> is a template function, <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">T</code> is the <em>template type</em>, <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">Type</code> the type deduced for <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">parameter</code>, <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">f(expression)</code> a function call to <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">f</code> and <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">expression</code> an expression passed to <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">f</code>.</p>
+<p>Case 1: <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">Type</code> is a reference or pointer, but not a universal reference (<code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">T&amp;&amp;</code>).</p>
+<p>In this case, there are two common rules for what <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">T</code> will be depending on <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">Type</code>:</p>
+<ol>
+<li>If <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">Type</code> is a reference, ignore it.</li>
+<li>Then pattern-match <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">T</code> against <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">Type</code>, ignoring common qualifiers between <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">Type</code> and <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">expression</code> for the deduction of <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">T</code>.</li>
+</ol>
+<p><em>Example 1: T&amp;</em></p>
+<pre title="C++" style="color: #000000; font-family: monospace,monospace; font-size: 0.9em; white-space: pre-wrap; word-wrap: break-word; border: 1px solid #cccccc; border-radius: 3px; overflow: auto; padding: 6px 10px; margin-bottom: 10px;background-color:#f8f8f8;">
+<code style="color: black; font-family: monospace,monospace; font-size: 0.9em;"><span style="color: #000000; font-weight: bold">template&lt;typename</span> T<span style="color: #000000; font-weight: bold">&gt;</span>
+<span style="color: #445588; font-weight: bold">void</span> f(T<span style="color: #000000; font-weight: bold">&amp;</span> parameter)
+{
+    <span style="color: #999988; font-style: italic">/* ... */</span>
+}
+
+<span style="color: #445588; font-weight: bold">int</span> x <span style="color: #000000; font-weight: bold">=</span> <span style="color: #009999">5</span>;          <span style="color: #999988; font-style: italic">// int</span>
+<span style="color: #000000; font-weight: bold">const</span> <span style="color: #445588; font-weight: bold">int</span> cx <span style="color: #000000; font-weight: bold">=</span> x;   <span style="color: #999988; font-style: italic">// const-int</span>
+<span style="color: #000000; font-weight: bold">const</span> <span style="color: #445588; font-weight: bold">int</span><span style="color: #000000; font-weight: bold">&amp;</span> rx <span style="color: #000000; font-weight: bold">=</span> x;  <span style="color: #999988; font-style: italic">// reference to const-int</span>
+
+<span style="color: #999988; font-style: italic">// Type is int&amp;, for T, ignore the &amp;. Then T = int</span>
+f(x);
+
+<span style="color: #999988; font-style: italic">// Type is const int&amp;, ignore the &amp;.</span>
+<span style="color: #999988; font-style: italic">// Pattern-matching T&amp; against const int&amp;</span>
+<span style="color: #999988; font-style: italic">// makes T have to be const int</span>
+f(cx);
+
+<span style="color: #999988; font-style: italic">// Type is const int&amp; (&amp; &amp; collapses to &amp;), ignore the &amp;</span>
+<span style="color: #999988; font-style: italic">// Same as above then, T is const int</span>
+f(rx);
+</code>
+</pre>
+<p><em>Example 2: const T&amp;</em></p>
+<pre title="C++" style="color: #000000; font-family: monospace,monospace; font-size: 0.9em; white-space: pre-wrap; word-wrap: break-word; border: 1px solid #cccccc; border-radius: 3px; overflow: auto; padding: 6px 10px; margin-bottom: 10px;background-color:#f8f8f8;">
+<code style="color: black; font-family: monospace,monospace; font-size: 0.9em;"><span style="color: #000000; font-weight: bold">template&lt;typename</span> T<span style="color: #000000; font-weight: bold">&gt;</span>
+<span style="color: #445588; font-weight: bold">void</span> f(<span style="color: #000000; font-weight: bold">const</span> T<span style="color: #000000; font-weight: bold">&amp;</span> parameter)
+{
+    <span style="color: #999988; font-style: italic">/* ... */</span>
+}
+
+<span style="color: #445588; font-weight: bold">int</span> x <span style="color: #000000; font-weight: bold">=</span> <span style="color: #009999">5</span>;          <span style="color: #999988; font-style: italic">// int</span>
+<span style="color: #000000; font-weight: bold">const</span> <span style="color: #445588; font-weight: bold">int</span> cx <span style="color: #000000; font-weight: bold">=</span> x;   <span style="color: #999988; font-style: italic">// const-int</span>
+<span style="color: #000000; font-weight: bold">const</span> <span style="color: #445588; font-weight: bold">int</span><span style="color: #000000; font-weight: bold">&amp;</span> rx <span style="color: #000000; font-weight: bold">=</span> x;  <span style="color: #999988; font-style: italic">// reference to const-int</span>
+
+<span style="color: #999988; font-style: italic">// Type is const int&amp;. For T: ignore the &amp;, "fill in" `int` as `T` in const T&amp;</span>
+f(x);
+
+<span style="color: #999988; font-style: italic">// Type is const int&amp;. For T: ignore the &amp;, pattern-match cont int&amp; of</span>
+<span style="color: #999988; font-style: italic">// the expression against the const int&amp; of the Type, and fill in the</span>
+<span style="color: #999988; font-style: italic">// unknown, you're left with T being int (ignore qualifiers already</span>
+<span style="color: #999988; font-style: italic">// present in Type and expression)</span>
+f(cx);
+
+<span style="color: #999988; font-style: italic">// Type is const int&amp; (&amp; &amp; collapses to &amp;), then same as above</span>
+f(rx);
+</code>
+</pre>
+<p>For pointers, it is quite the same.</p>
+<p><em>Example 3: T*</em></p>
+<pre title="C++" style="color: #000000; font-family: monospace,monospace; font-size: 0.9em; white-space: pre-wrap; word-wrap: break-word; border: 1px solid #cccccc; border-radius: 3px; overflow: auto; padding: 6px 10px; margin-bottom: 10px;background-color:#f8f8f8;">
+<code style="color: black; font-family: monospace,monospace; font-size: 0.9em;"><span style="color: #000000; font-weight: bold">template&lt;typename</span> T<span style="color: #000000; font-weight: bold">&gt;</span>
+<span style="color: #445588; font-weight: bold">void</span> f(T<span style="color: #000000; font-weight: bold">*</span> parameter)
+{
+    <span style="color: #999988; font-style: italic">/* ... */</span>
+}
+
+<span style="color: #445588; font-weight: bold">int</span> x <span style="color: #000000; font-weight: bold">=</span> <span style="color: #009999">5</span>;          <span style="color: #999988; font-style: italic">// int</span>
+<span style="color: #000000; font-weight: bold">const</span> <span style="color: #445588; font-weight: bold">int</span><span style="color: #000000; font-weight: bold">*</span> px <span style="color: #000000; font-weight: bold">=</span> <span style="color: #000000; font-weight: bold">&amp;</span>x; <span style="color: #999988; font-style: italic">// pointer to const-int</span>
+
+<span style="color: #999988; font-style: italic">// Type is int*, fill in `int` for `T`</span>
+f(<span style="color: #000000; font-weight: bold">&amp;</span>x);
+
+<span style="color: #999988; font-style: italic">// Type is const int*, ignore the *, then fill in `const int` for `T`</span>
+f(px);
+</code>
+</pre>
+<p>Case 2: Universal References</p>
+<p>Universal references are declared as <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">T&amp;&amp;</code> and use special <em>reference collapsing rules</em>, whereby, for example <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">int&amp; &amp;&amp;</code> collapses to <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">int&amp;</code> or <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">int&amp;&amp; &amp;&amp;</code> collapses to <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">int&amp;&amp;</code>. There are important rules regarding whether or not the expresssion passed is an lvalue or an rvalue:</p>
+<ul>
+<li>If the expression is an lvalue, <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">T</code> and <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">Type</code> are deduced as __lvalue references__. This means that this is the only situation in which <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">T</code> can be a reference type!</li>
+<li>If the expression is an rvalue, the normal deduction rules of case 1 apply.</li>
+</ul>
+<pre title="C++" style="color: #000000; font-family: monospace,monospace; font-size: 0.9em; white-space: pre-wrap; word-wrap: break-word; border: 1px solid #cccccc; border-radius: 3px; overflow: auto; padding: 6px 10px; margin-bottom: 10px;background-color:#f8f8f8;">
+<code style="color: black; font-family: monospace,monospace; font-size: 0.9em;"><span style="color: #000000; font-weight: bold">template&lt;typename</span> T<span style="color: #000000; font-weight: bold">&gt;</span>
+<span style="color: #445588; font-weight: bold">void</span> f(T<span style="color: #000000; font-weight: bold">&amp;&amp;</span> parameter)
+{
+    <span style="color: #999988; font-style: italic">/* ... */</span>
+}
+
+<span style="color: #445588; font-weight: bold">int</span> x <span style="color: #000000; font-weight: bold">=</span> <span style="color: #009999">27</span>;         <span style="color: #999988; font-style: italic">// int</span>
+<span style="color: #000000; font-weight: bold">const</span> <span style="color: #445588; font-weight: bold">int</span> cx <span style="color: #000000; font-weight: bold">=</span> x;   <span style="color: #999988; font-style: italic">// const-int</span>
+<span style="color: #000000; font-weight: bold">const</span> <span style="color: #445588; font-weight: bold">int</span><span style="color: #000000; font-weight: bold">&amp;</span> rx <span style="color: #000000; font-weight: bold">=</span> x;  <span style="color: #999988; font-style: italic">// reference to const-int</span>
+
+
+<span style="color: #999988; font-style: italic">// x is an lvalue, thus it is passed as an lvalue reference.</span>
+<span style="color: #999988; font-style: italic">// `int&amp; &amp;&amp;` then collapses to `int&amp;` for the `Type` as well as `T`</span>
+<span style="color: #999988; font-style: italic">// (You can again think of filling in the `int&amp;` for `T`)</span>
+f(x);
+
+<span style="color: #999988; font-style: italic">// same collapsing rules and explanation as above, making `Type` and `T`</span>
+<span style="color: #999988; font-style: italic">// `const int&amp;` (lvalues)</span>
+f(cx);
+
+<span style="color: #999988; font-style: italic">// same as f(x), just here the reference is explicit</span>
+<span style="color: #999988; font-style: italic">// while it is implicitly added for f(x)</span>
+f(rx);
+
+<span style="color: #999988; font-style: italic">// Now the expression is an rvalue instead of an lvalue, so nothing special</span>
+<span style="color: #999988; font-style: italic">// happens (no implicit lvalue to reference-to-lvalue conversion)</span>
+<span style="color: #999988; font-style: italic">// Type is `int&amp;&amp;` and filling in for `T` makes T = int</span>
+f(<span style="color: #009999">27</span>);
+</code>
+</pre>
+<p>Case 3: Pass-by-value</p>
+<p>When the parameter signature does not include a pointer or reference, the rules are slightly difference, but very sensical. The important thing to note is that pass-by-value means copying, which in turn means that just because an expression was cv-qualified does not mean that the copy also has to be cv-qualified. The rules for deduction of <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">T</code> are thus:</p>
+<ol>
+<li>Ignore the &amp; in expression's type (as before).</li>
+<li>Ignore also cv-qualifications.</li>
+</ol>
+<p><em>Example 1: passing non-pointers</em></p>
+<pre title="C++" style="color: #000000; font-family: monospace,monospace; font-size: 0.9em; white-space: pre-wrap; word-wrap: break-word; border: 1px solid #cccccc; border-radius: 3px; overflow: auto; padding: 6px 10px; margin-bottom: 10px;background-color:#f8f8f8;">
+<code style="color: black; font-family: monospace,monospace; font-size: 0.9em;"><span style="color: #000000; font-weight: bold">template&lt;typename</span> T<span style="color: #000000; font-weight: bold">&gt;</span>
+<span style="color: #445588; font-weight: bold">void</span> f(T parameter)     <span style="color: #999988; font-style: italic">// note the pass-by-value</span>
+{
+    <span style="color: #999988; font-style: italic">/* ... */</span>
+}
+
+<span style="color: #445588; font-weight: bold">int</span> x <span style="color: #000000; font-weight: bold">=</span> <span style="color: #009999">5</span>;          <span style="color: #999988; font-style: italic">// int</span>
+<span style="color: #000000; font-weight: bold">const</span> <span style="color: #445588; font-weight: bold">int</span> cx <span style="color: #000000; font-weight: bold">=</span> x;   <span style="color: #999988; font-style: italic">// const-int</span>
+<span style="color: #000000; font-weight: bold">const</span> <span style="color: #445588; font-weight: bold">int</span><span style="color: #000000; font-weight: bold">&amp;</span> rx <span style="color: #000000; font-weight: bold">=</span> x;  <span style="color: #999988; font-style: italic">// reference to const-int</span>
+
+<span style="color: #999988; font-style: italic">// T and Type are int</span>
+f(x);
+
+<span style="color: #999988; font-style: italic">// Just because cx is const does not mean we'll not want to modify</span>
+<span style="color: #999988; font-style: italic">// its copy (else we'd take a reference), thus ignore the cv-qualifications</span>
+<span style="color: #999988; font-style: italic">// (ignore the const, if it were volatile, also ignore that)</span>
+<span style="color: #999988; font-style: italic">// Type = T = int</span>
+f(cx);
+
+
+<span style="color: #999988; font-style: italic">// Ignore the &amp; as always (specifically here though the copy should be</span>
+<span style="color: #999988; font-style: italic">// a new object, not a reference to the old one), and then also ignore</span>
+<span style="color: #999988; font-style: italic">// the cv-qualifications. Type = T = int</span>
+f(rx);
+</code>
+</pre>
+<p>For pointers, the situation is a little different. Specifically, consider the case that you have a pointer pointing to a const-object (<code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">const T*</code>). You do not wish to modify this object. When you pass a pointer by value, the copied pointer will point to the same memory address. However, it should also not modify the original value, because it is not a new value as in the non-pointer case, thus it only makes sense that the deduced type be <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">const T*</code> in such a case, However, the argument that "copied values should be independent of their source objects" still applies. If the pointer itself is const, i.e. <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">T* const</code>, then that means you cannot point that pointer anywhere else anymore. That would apply to this pointer, but shouldn't apply to a copy by the same logic as for non-pointer values. Thus the deduced type would be <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">T*</code>. In summary <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">const T* const</code> would thus deduce to <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">const T*</code> because the <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">const</code> after the <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">*</code> applies to the pointer itself while the <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">const</code> before the <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">T</code> refers to the type pointed to by <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">T</code>.</p>
+<p><em>Example 2: pointers</em></p>
+<pre title="C++" style="color: #000000; font-family: monospace,monospace; font-size: 0.9em; white-space: pre-wrap; word-wrap: break-word; border: 1px solid #cccccc; border-radius: 3px; overflow: auto; padding: 6px 10px; margin-bottom: 10px;background-color:#f8f8f8;">
+<code style="color: black; font-family: monospace,monospace; font-size: 0.9em;"><span style="color: #000000; font-weight: bold">template&lt;typename</span> T<span style="color: #000000; font-weight: bold">&gt;</span>
+<span style="color: #445588; font-weight: bold">void</span> f(T parameter)     <span style="color: #999988; font-style: italic">// note the pass-by-value</span>
+{
+    <span style="color: #999988; font-style: italic">/* ... */</span>
+}
+
+<span style="color: #445588; font-weight: bold">int</span> x <span style="color: #000000; font-weight: bold">=</span> <span style="color: #009999">5</span>;          <span style="color: #999988; font-style: italic">// int</span>
+<span style="color: #000000; font-weight: bold">const</span> <span style="color: #445588; font-weight: bold">int</span><span style="color: #000000; font-weight: bold">*</span> px <span style="color: #000000; font-weight: bold">=</span> <span style="color: #000000; font-weight: bold">&amp;</span>x; <span style="color: #999988; font-style: italic">// pointer to const-int</span>
+<span style="color: #000000; font-weight: bold">const</span> <span style="color: #445588; font-weight: bold">int</span><span style="color: #000000; font-weight: bold">*</span> <span style="color: #000000; font-weight: bold">const</span> cpx <span style="color: #000000; font-weight: bold">=</span> <span style="color: #000000; font-weight: bold">&amp;</span>x; <span style="color: #999988; font-style: italic">// const-pointer to const-int</span>
+
+<span style="color: #999988; font-style: italic">// Type and T deduced to int* (* is not removed)</span>
+f(<span style="color: #000000; font-weight: bold">&amp;</span>x);
+
+<span style="color: #999988; font-style: italic">// The copy of cx should also not modify x, thus Type = T = const int*</span>
+f(cx);
+
+<span style="color: #999988; font-style: italic">// The copy of cx should also not modify x, but just because we cannot</span>
+<span style="color: #999988; font-style: italic">// re-point cpx doesn't mean we shouldn't be able to re-point its copy</span>
+<span style="color: #999988; font-style: italic">// which is entirely independent of cpx. Thus Type = T = const int*</span>
+f(rx);
+</code>
+</pre>
+<h2>Array Arguments</h2>
+<p>For array arguments, e.g. <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">int a [3];</code>, there are two main rules:</p>
+<ol>
+<li>If <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">Type</code> is <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">T</code>, the array decays to a pointer to the first element in the array.</li>
+<li>If <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">Type</code> is <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">T&amp;</code>, the array does not decay and <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">T</code> really is a reference to an array type, e.g. <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">int (&amp;) [N]</code>. This means also the length <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">N</code> is passed to the function. CV-qualifiers are not dropped.</li>
+</ol>
+<p><em>Example 1: T</em></p>
+<pre title="C++" style="color: #000000; font-family: monospace,monospace; font-size: 0.9em; white-space: pre-wrap; word-wrap: break-word; border: 1px solid #cccccc; border-radius: 3px; overflow: auto; padding: 6px 10px; margin-bottom: 10px;background-color:#f8f8f8;">
+<code style="color: black; font-family: monospace,monospace; font-size: 0.9em;"><span style="color: #000000; font-weight: bold">template&lt;typename</span> T<span style="color: #000000; font-weight: bold">&gt;</span>
+<span style="color: #445588; font-weight: bold">void</span> f(T array)
+{
+    <span style="color: #999988; font-style: italic">/* ... */</span>
+}
+
+<span style="color: #445588; font-weight: bold">int</span> array [] <span style="color: #000000; font-weight: bold">=</span> {<span style="color: #009999">1</span>, <span style="color: #009999">2</span>, <span style="color: #009999">3</span>};
+
+<span style="color: #999988; font-style: italic">// The array will decay to a pointer, making `T = int*`</span>
+f(array);
+</code>
+</pre>
+<p><em>Example 2: T&amp;</em></p>
+<pre title="C++" style="color: #000000; font-family: monospace,monospace; font-size: 0.9em; white-space: pre-wrap; word-wrap: break-word; border: 1px solid #cccccc; border-radius: 3px; overflow: auto; padding: 6px 10px; margin-bottom: 10px;background-color:#f8f8f8;">
+<code style="color: black; font-family: monospace,monospace; font-size: 0.9em;"><span style="color: #000000; font-weight: bold">template&lt;typename</span> T<span style="color: #000000; font-weight: bold">&gt;</span>
+<span style="color: #445588; font-weight: bold">void</span> f(T<span style="color: #000000; font-weight: bold">&amp;</span> array)
+{
+    <span style="color: #999988; font-style: italic">/* ... */</span>
+}
+
+<span style="color: #000000; font-weight: bold">const</span> <span style="color: #445588; font-weight: bold">int</span> array [] <span style="color: #000000; font-weight: bold">=</span> {<span style="color: #009999">1</span>, <span style="color: #009999">2</span>, <span style="color: #009999">3</span>};
+
+<span style="color: #999988; font-style: italic">// Array is taken by reference, T is of type `const int [3]`</span>
+f(array);
+</code>
+</pre>
+<p>Note that the above function signature is equivalent to the following:</p>
+<pre title="C++" style="color: #000000; font-family: monospace,monospace; font-size: 0.9em; white-space: pre-wrap; word-wrap: break-word; border: 1px solid #cccccc; border-radius: 3px; overflow: auto; padding: 6px 10px; margin-bottom: 10px;background-color:#f8f8f8;">
+<code style="color: black; font-family: monospace,monospace; font-size: 0.9em;"><span style="color: #000000; font-weight: bold">template&lt;typename</span> T, std<span style="color: #000000; font-weight: bold">::</span><span style="color: #445588; font-weight: bold">size_t</span> N<span style="color: #000000; font-weight: bold">&gt;</span>
+<span style="color: #445588; font-weight: bold">void</span> f(T (<span style="color: #000000; font-weight: bold">&amp;</span>array) [N]);
+</code>
+</pre>
+<p>When using <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">[]</code> additionally it must include the size, though. Meaning this is not valid:</p>
+<pre title="C++" style="color: #000000; font-family: monospace,monospace; font-size: 0.9em; white-space: pre-wrap; word-wrap: break-word; border: 1px solid #cccccc; border-radius: 3px; overflow: auto; padding: 6px 10px; margin-bottom: 10px;background-color:#f8f8f8;">
+<code style="color: black; font-family: monospace,monospace; font-size: 0.9em;"><span style="color: #000000; font-weight: bold">template&lt;typename</span> T<span style="color: #000000; font-weight: bold">&gt;</span>
+<span style="color: #445588; font-weight: bold">void</span> f(T (<span style="color: #000000; font-weight: bold">&amp;</span>array) []);
+</code>
+</pre>
+<p><em>Example 3: Determining the length of an array due to template type deduction.</em></p>
+<pre title="C++" style="color: #000000; font-family: monospace,monospace; font-size: 0.9em; white-space: pre-wrap; word-wrap: break-word; border: 1px solid #cccccc; border-radius: 3px; overflow: auto; padding: 6px 10px; margin-bottom: 10px;background-color:#f8f8f8;">
+<code style="color: black; font-family: monospace,monospace; font-size: 0.9em;"><span style="color: #000000; font-weight: bold">template&lt;typename</span> T, std<span style="color: #000000; font-weight: bold">::</span><span style="color: #445588; font-weight: bold">size_t</span> N<span style="color: #000000; font-weight: bold">&gt;</span>
+constexpr std<span style="color: #000000; font-weight: bold">::</span><span style="color: #445588; font-weight: bold">size_t</span> array_length(<span style="color: #000000; font-weight: bold">const</span> T (<span style="color: #000000; font-weight: bold">&amp;</span>) [N]) noexcept
+{
+    <span style="color: #000000; font-weight: bold">return</span> N;
+}
+</code>
+</pre></body></html>

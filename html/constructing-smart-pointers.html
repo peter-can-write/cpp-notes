@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="518"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-02-28 17:32:51 +0000"/><meta name="latitude" content="46.62858276367184"/><meta name="longitude" content="13.82443237304688"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-02-28 17:33:42 +0000"/><title>Constructing smart pointers</title></head><body>
+<div>
+<div><span style="font-family: 'Helvetica Neue';">Make sure that no exception can occur between the allocation of a resource and the passing of that resource to the constructor of a resource-managing class. </span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">do(std::unique_ptr(new Widget), callToFunction());</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">In the above statement, there are three statements the compiler will execute:</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div>
+<ul>
+<li><span style="font-family: 'Helvetica Neue';"><b>new Widget</b> to allocate the resource</span></li>
+<li><span style="font-family: 'Helvetica Neue';">std::unique_ptr(…) The passing of the widget to the constructor of std::unique_ptr</span></li>
+<li><span style="font-family: 'Helvetica Neue';"><b>callToFunction()</b> some other function that needs to be called</span></li>
+</ul>
+<div><span style="font-family: 'Helvetica Neue';">However, the compiler is free to choose the order in which to execute these three statements. If the compiler happens to first allocate the resource and then executes <b>callToFunction()</b> because that makes the code more efficient for some reason, the situation could occur where an exception in <b>callToFunction()</b> may prevent the previously allocated widget to be passed on to the resource-managing class, std::unique_ptr. In that case, the resources would leak!</span></div>
+</div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">Therefore, make sure allocations are exception safe:</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">std::unique_ptr ptr(new Widget);</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">do(ptr,callToFunction());</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+</div>
+<div><span style="font-family: 'Helvetica Neue';">Nothing can happen between the allocation and the passing on of the resource in this case.</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-size: 24px;"><b><span style="font-family: 'Helvetica Neue';">Or, in C++14:</span></b></span></div>
+<div><b><span style="font-family: 'Helvetica Neue';"><br/></span></b></div>
+<div><span style="font-family: 'Helvetica Neue';">std::make_unique&lt;Widget&gt;(); // Returns std::unique_ptr&lt;Widget&gt;</span></div>
+<div><br/></div>
+</body></html>

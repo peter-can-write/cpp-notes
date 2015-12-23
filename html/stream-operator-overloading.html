@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="518"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-02-28 16:18:01 +0000"/><meta name="latitude" content="46.62858276384127"/><meta name="longitude" content="13.82443237307295"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-02-28 16:21:24 +0000"/><title>Stream operator overloading</title></head><body>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">class</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">Foo<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">public</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">:<br/>
+   <br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">friend</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">std::ostream&amp;</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">operator</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;&lt;(std::ostream&amp; stream,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">Foo&amp; foo)<br/>
+    {<br/>
+        stream &lt;&lt; foo.x;<br/>
+       <br/>
+       </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">return</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">stream;<br/>
+    }<br/>
+   <br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">friend</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">std::istream&amp;</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">operator</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&gt;&gt;(std::istream&amp; stream, Foo&amp; foo)<br/>
+    {<br/>
+        stream &gt;&gt; foo.x;<br/>
+       <br/>
+       </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">return</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">stream;<br/>
+    }<br/>
+   <br/></span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">private</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">:<br/>
+   <br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font-style: normal; font-variant: normal; font-weight: normal; line-height: normal;"><span style="font-size: 11px;"><span style="font-family: Menlo;">x;</span></span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">};</span></span></div>
+<div><br/></div>
+</body></html>

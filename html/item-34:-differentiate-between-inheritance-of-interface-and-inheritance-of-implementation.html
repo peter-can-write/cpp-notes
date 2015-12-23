@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="518"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-02-28 17:36:39 +0000"/><meta name="latitude" content="46.62858276367184"/><meta name="longitude" content="13.82443237304688"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-02-28 17:37:12 +0000"/><title>Item 34: Differentiate between inheritance of interface and inheritance of implementation</title></head><body>
+<div>
+<div><span style="font-family: 'Helvetica Neue';">Know about the three types of function inheritance:</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">Pure-virtual functions specify that the derived class inherits the public interface of its base class but no default implementation</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">Simple virtual functions specify that the derived class inherits the base class’ interface and a default implementation</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">Non-virtual function inheritance inherits the base class’ interface and a <b>mandatory</b> implementation (note: use <b>final</b> keyword)</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';"><b>Note that you can specify a default implementation for pure-virtual functions!</b> Then the base classes must still define it, but can access and use the base class implementation by calling base::function() from inside derived::function()!</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">Use this feature when you want all derived classes to implement the pure-virtual function, while some classes may make use of the default behavior and others not, who then still have to implement it themselves.</span></div>
+</div>
+<div><br/></div>
+</body></html>

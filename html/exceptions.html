@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="518"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-02-28 16:22:07 +0000"/><meta name="latitude" content="46.62858276367074"/><meta name="longitude" content="13.82443237304671"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-02-28 16:25:47 +0000"/><title>Exceptions</title></head><body>
+<div>#include &lt;stdexcept&gt;</div>
+<div><br/></div>
+<ul>
+<li>std::logic_error</li>
+<li>std::invalid_argument</li>
+<li>std::runtime_error</li>
+<li>std::range_error</li>
+<li>std::length_error</li>
+<li>std::domain_error</li>
+<li>std::overflow_error</li>
+<li>std::underflow_error</li>
+<li>std::out_of_range</li>
+</ul>
+<div><br/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">void</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">foo()<br/>
+{<br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">throw</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">runtime_error</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #43d34b">"An error occured!"</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">);<br/>
+}<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">main(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">argc,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">char</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">* argv [])<br/>
+{<br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">try</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+    {<br/>
+       </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #31595d">foo</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">();<br/>
+    }<br/>
+   <br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">catch</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">exception</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&amp; e)<br/>
+    {<br/>
+       </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">cout</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;&lt; e.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">what</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">() &lt;&lt;</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">endl</span><span style="font-style: normal; font-variant: normal; font-weight: normal; line-height: normal;"><span style="font-size: 11px;"><span style="font-family: Menlo;">;<br/>
+    }<br/>
+   </span></span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">}</span></span></div>
+</body></html>

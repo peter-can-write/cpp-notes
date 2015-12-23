@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="518"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-02-28 17:42:34 +0000"/><meta name="latitude" content="46.62858276367184"/><meta name="longitude" content="13.82443237304688"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-05-20 12:16:37 +0000"/><title>Item 43: Know how to access names in templatized base classes</title></head><body>
+<div>Inheritance doesn’t work out-of-the-box with template classes, because the compiler can never know the full definition of a template base class, as all template classes can be specialized (and thus certain inherited members may be defined in the general template but not in the specialization):</div>
+<div>
+<div><br/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">template</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">typename</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">T&gt;<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">class</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">Base<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">public</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">:<br/>
+   <br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">void</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">foo()<br/>
+    {}<br/>
+};</span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;"><br/></span></span></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">template</span><span style="font-family: Menlo;"><span style="font-size: 11px;">&lt;&gt; // specialization</span></span></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">class</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">Base&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&gt;<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">public</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">:<br/>
+   <br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">void</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">bar()<br/>
+    { }<br/>
+};<br/>
+<br/></span></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">template</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">typename</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">T&gt;</span></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">class</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">DerivedFaulty :</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">public</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #4f8187">Base</span><span style="font-family: Menlo;"><span style="font-size: 11px;">&lt;T&gt;</span></span></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">public</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">:<br/>
+   <br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">void</span> <span style="font-style: normal; font-variant: normal; font-weight: normal;"><span style="font-size: 11px;"><span style="font-family: Menlo;">callFoo()</span></span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">    {</span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">        foo(); <span style="color: rgb(110, 110, 110);">// Error, foo undefined (compiler cannot know if Base has foo until instantiation)</span></span></span></div>
+<div><span style="font-style: normal; font-variant: normal; font-weight: normal;"><span style="font-size: 11px;"><span style="font-family: Menlo;">    }</span></span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">};</span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;"><br/></span></span></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">template</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">typename</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">T&gt;<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">class</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">DerivedWorks :</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">public</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #4f8187">Base</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;T&gt;<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">public</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">:<br/>
+   <br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">using</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #4f8187">Base</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;T&gt;::foo;</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// Promise compiler that foo will exist</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+   <br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">void</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">callFoo()<br/>
+    {<br/>
+        foo();</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// now works</span><span style="font-style: normal; font-variant: normal; font-weight: normal;"><span style="font-size: 11px;"><span style="font-family: Menlo;"><br/>
+    }</span></span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">};</span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;"><br/></span></span></div>
+<div><span style="font-family: 'Helvetica Neue';">This also means that DerivedWorks&lt;int&gt; will cause a compile-time error because Base&lt;int&gt;::foo does not exist.</span></div>
+</div>
+<div><br/></div>
+</body></html>

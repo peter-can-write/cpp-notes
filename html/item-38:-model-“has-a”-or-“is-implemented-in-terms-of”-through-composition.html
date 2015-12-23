@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="518"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-02-28 17:39:27 +0000"/><meta name="latitude" content="46.62858276367184"/><meta name="longitude" content="13.82443237304688"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-02-28 17:39:34 +0000"/><title>Item 38: Model “has-a” or “is-implemented-in-terms-of” through composition.</title></head><body>
+<div>
+<div><span style="font-family: 'Helvetica Neue';">Composition means modeling one type as a compound of other types. It can be described as a “has-a” relationship and should be used when “is-a” does not apply. E.g., a Person has a name, a Person <i>is</i> not a name.</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">Is-implemented-in-terms of is used when public inheritance could be used, but would violate the “is-a” principle. E.g., a list can contain any items any number of times. To model a set (no duplicates) with a list, one could inherit the set from list publicly. However, every set would need to be a list, and because a list can hold duplicates and a set not, it is not true that a set <b>is</b> a list. Rather, the set should be composed of a list. The set is then said to be “implemented in terms of” a list.</span></div>
+</div>
+<div><br/></div>
+</body></html>

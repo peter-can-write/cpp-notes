@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="518"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-03-20 19:48:24 +0000"/><meta name="latitude" content="46.62858276367184"/><meta name="longitude" content="13.82443237304688"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-07-06 15:13:02 +0000"/><title>Item 48: Template Meta Programming (TMP)</title></head><body>
+
+	<div>Template Meta Programming (TMP) is a programming methodology that makes it possible to shift program logic from runtime to compile time, using solely types and templates. This can be a lot more memory efficient, can have better performance and allows for earlier error detection based on types.</div>
+
+	<div><br/></div>
+
+	<div>“Template metaprogramming can shift work from runtime to compile-time, thus enabling earlier error detection and higher runtime performance."</div>
+
+	<div><br/></div>
+
+	<div>Factorial using Template Meta Programming:</div>
+
+	<div><br/></div>
+
+	<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">template</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">size_t</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">n&gt;<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">struct</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">Factorial<br/>
+{<br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">enum</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">{ value = n *</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #4f8187">Factorial</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;n-</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">1</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&gt;::value };<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">template</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;&gt;<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">struct</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">Factorial&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">0</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&gt;<br/>
+{<br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">enum</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">{ value =</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">1</span> <span style="font-style: normal; font-variant: normal; font-weight: normal;"><span style="font-size: 11px;"><span style="font-family: Menlo;">};</span></span></span></div>
+
+	<div><span style="font-size: 11px;"><span style="font-family: Menlo;">};</span></span></div>
+
+	<div><span style="font-size: 11px;"><span style="font-family: Menlo;"><br/></span></span></div>
+
+	<div><span style="font-size: 11px;"><span style="font-family: Menlo;">Output:</span></span></div>
+
+	<div><span style="font-size: 11px;"><span style="font-family: Menlo;"><br/></span></span></div>
+
+	<div><span style="font-size: 11px;"><span style="font-family: Menlo;">&gt;&gt;&gt; </span></span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">cout</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;&lt;</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #4f8187">Factorial</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">4</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&gt;::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #31595d">value</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">;</span></div>
+
+	<div><span style="font-size: 11px;"><span style="font-family: Menlo;">&gt;&gt;&gt; 24</span></span></div>
+
+	<div><span style="font-size: 11px;"><span style="font-family: Menlo;"><br/></span></span></div>
+
+	<div><span style="font-size: 11px;"><span style="font-family: Menlo;">Loop using Template Meta Programming:</span></span></div>
+
+	<div><span style="font-size: 11px;"><span style="font-family: Menlo;"><br/></span></span></div>
+
+	<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">template</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;std::size_t i, std::size_t n&gt;<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">class</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">Loop<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">public</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">:<br/>
+   <br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">static</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">void</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">notaloophehe()<br/>
+    {<br/>
+       </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">cout</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;&lt; i &lt;&lt;</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">endl</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">;<br/>
+       </span></div>
+
+	<div><span style="font-size: 11px;"><span style="font-family: Menlo;">        <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #4f8187">Print</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;i+</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">1</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">, n&gt;::notaloophehe();</span></span></span></div>
+
+	<div><span style="font-size: 11px;"><span style="font-family: Menlo;">    }</span></span></div>
+
+	<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">};<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">template</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;std::size_t i&gt;<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">class</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">Loop&lt;i, i&gt;<br/>
+{<br/>
+   <br/></span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">public</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">:<br/>
+   <br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">static</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">void</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">notaloophehe()<br/>
+    {<br/>
+       </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">cout</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;&lt; i &lt;&lt;</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">endl</span><span style="font-style: normal; font-variant: normal; font-weight: normal; line-height: normal;"><span style="font-size: 11px;"><span style="font-family: Menlo;">;<br/>
+    }</span></span></span></div>
+
+	<div><span style="font-size: 11px;"><span style="font-family: Menlo;">};</span></span></div>
+
+
+
+</body></html>

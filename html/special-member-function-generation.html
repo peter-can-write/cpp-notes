@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="477.9999084472656"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-12-10 16:42:33 +0000"/><meta name="latitude" content="48.25679926165675"/><meta name="longitude" content="11.65519186988954"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-12-10 17:14:40 +0000"/><title>Special member function generation</title></head><body>
+<div>In C++11, there are five “special" member functions:</div>
+<div><br/></div>
+<ul>
+<li>Constructor</li>
+<li>Copy Constructor</li>
+<li>Copy-Assignment Operator</li>
+<li>Move Constructor</li>
+<li>Move-Assignment Operator</li>
+<li>Destructor</li>
+</ul>
+<div><br/></div>
+<div>These are the special member functions the compiler will generate for you, <b>when needed</b>. If the necessity for all arises, the compiler will silently define all five of them for you. Moreover, the compiler makes them:</div>
+<div><br/></div>
+<ul>
+<li>Public</li>
+<li>Inline</li>
+<li>Non-virtual, unless it is the destructor and it is also declared virtual in a base-class</li>
+<li>Perform member-wise operations, i.e. copies/moves</li>
+</ul>
+<div><br/></div>
+<div>Note for the last that the default-move-constructor will perform member-wise moves, but that those move-operations will really only be move-operations if the objects/members define move-constructors (which may not be the case for many legacy C++98 classes). For all of these operations/methods, the compiler makes the assumption that resource management is standard or trivial, i.e. there is nothing <i>special</i> about how copies/moves/construction/destruction should work. However, when you yourself define either the copy or move operations or the destructor, it is most likely because there <i>is</i> something special about how you, for example, perform copy-operations. Therefore, the compiler, in C++11, will restrict itself. This yields the following rules for special member function generation:</div>
+<div><br/></div>
+<ul>
+<li><b>Copy-Constructor:</b> only generated if you do not yourself define a move operation (such a definition would imply naïve member-wise copying does not suit for the resources/objects managed by the class). Still generated if you define a copy-assignment-operator or destructor, <i>but deprecated</i>.</li>
+<li><b>Copy-Assignment Operator:</b> only generated if you do not yourself define a move operation. Generation alongside user-defined copy-constructor or destructor deprecated.</li>
+<li><b>Move-Constructor:</b> generated only for classes lacking <i>any </i>explicitly declared <i>copy-operations, move-operations and destructors.</i> I.e. the presence of either the copy-constructor or copy-assignment-operator, a destructor or the accompanying move-operation, here the move-assignment operator, will cause the move-constructor not to be default-defined.</li>
+<li><b>Move-Assignment Operator</b>: generated only for classes lacking any explicitly declared copy-operations, move-operations and destructors. I.e. not generated in the presence of an explicitly declared move-constructor.</li>
+<li><b>Constructor:</b> Declared when needed, unaffected by C++11.</li>
+<li><b>Destructor:</b> Disallows default-generation of both move-operations and default-generation of copy-operations is deprecated. In C++11 now also implicitly declared <i>noexcept.</i></li>
+</ul>
+<div><i><br/></i></div>
+<div>if copy-constructor not defined:</div>
+<div>     if copy-constructor needed:</div>
+<div>          if destructor not defined and copy-assignment-operator not defined:          </div>
+<div>               generate copy-constructor</div>
+<div>          else:</div>
+<div>               generate copy-constructor (deprecated)</div>
+<div>     if copy-assignment-operator not defined:</div>
+<div>          if destructor not defined:</div>
+<div>               if no move-operation defined:</div>
+<div>                    if move-constructor needed:</div>
+<div>                         generate move-constructor</div>
+<div>                    if move-assignment-operator needed:</div>
+<div>                          generate move-assignment-operator</div>
+<div>if copy-assignment-operator not defined:</div>
+<div>     if copy-assignment-operator needed:</div>
+<div>          if destructor not defined and copy-constructor not defined:</div>
+<div>               generate copy-assignment-operator</div>
+<div>          else:</div>
+<div>               generate copy-assignment-operator (deprecated)</div>
+<div><br/></div>
+<div>Last point of interest: explicitly-declared <i>template</i> member functions don’t count as regular function, thus a template-copy-constructor would not prohibit a default-generated move-constructor, for example.<b> </b></div>
+</body></html>

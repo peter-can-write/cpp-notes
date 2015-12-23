@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="518"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-04-13 18:50:23 +0000"/><meta name="latitude" content="46.62854214072212"/><meta name="longitude" content="13.82443451048288"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-04-13 19:14:45 +0000"/><title>STL Containers</title></head><body>
+<div>Do not write container-independent code! Iterator invalidation, insertion, deletion, push_back and push_front patterns, iterator capabilities differ widely between STL containers. Rather, <b>encapsulate</b> operations and interactions and use <b>typedef</b> or <b>using=</b> to not have to specify the container everywhere (makes changing later easier).</div>
+<div><br/></div>
+<div>Standard STL sequence containers: vector, string, deque and list</div>
+<div><br/></div>
+<div>Standard STL associative containers: set, multiset, map, multimap</div>
+<div><br/></div>
+<div>Standard non-STL containers: array, bitset, stack, queue</div>
+<div><br/></div>
+<div>vector: default</div>
+<div>list: frequent insertions and deletions in the middle of the sequence</div>
+<div>deque: insertions and deletions at the beginning and end of sequence</div>
+<div><br/></div>
+<div><b>Contiguous-memory containers</b> store items sequentially, contiguously in dynamically allocated chunks of memory, like an array. More than one item is stored per chunk, so insertions and deletions effect other elements and require them to be moved.</div>
+<div><br/></div>
+<div><b>Node-based containers</b> store single items in single chunks of dynamically allocated memory and connect them via pointers. Insertion or erasing does not affect any other nodes / elements other than the node itself and its immediate neighbors. </div>
+<div><br/></div>
+<div><i>Do you need to be able to insert a new element at an any position in the container? </i><b>No associative containers</b></div>
+<div><b><br/></b></div>
+<div><i>Do you care about order?</i> <b>No hashed containers</b></div>
+<div><i><b><br/></b></i></div>
+<div><i>What iterator categories are required?</i> <b>RandomAccessIterators -&gt; vector, deque; BiDirectional -&gt; list</b></div>
+<div><br/></div>
+<div><i>Is lookup speed important?</i> <b>Hashed containers, sorted vectors, associate containers.</b></div>
+<div><b><br/></b></div>
+<div><i>Do you need to minimize iterator invalidation? </i><b>Node-based containers. </b></div>
+<div><b><br/></b></div>
+<div><b><br/></b></div>
+</body></html>

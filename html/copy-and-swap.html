@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="518"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-02-28 17:42:18 +0000"/><meta name="latitude" content="46.62858276367184"/><meta name="longitude" content="13.82443237304688"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-07-20 11:32:19 +0000"/><title>Copy and swap</title></head><body>
+<div>
+<div><span style="font-family: 'Helvetica Neue';">Use the <b>copy-and-swap idiom</b> for copy-assignment operators.</span></div>
+</div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">Improves exception safety because once swapping happens, all data is already copied and allocated via the copy constructor in the parameter list of the copy-assignment operator. Also, when the copied object goes out of scope it will contain the resources of the destination object and those are then deleted automatically.</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><a href="http://stackoverflow.com/questions/3279543/what-is-the-copy-and-swap-idiom">http://stackoverflow.com/questions/3279543/what-is-the-copy-and-swap-idiom</a></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div>
+<div><span style="font-family: 'Helvetica Neue';">It implies defining a public swap member function:</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">void Foo::swap(Foo&amp; other)</span></div>
+<div><span style="font-family: 'Helvetica Neue';">{</span></div>
+<div><font face="Helvetica Neue">     // For argument-dependent-lookup (Foo’s data members may have</font></div>
+<div><font face="Helvetica Neue">     // their own swap functions, else std::swap is used)</font></div>
+<div><font face="Helvetica Neue">     using std::swap;</font></div>
+<div><br/></div>
+<div><span style="font-family: 'Helvetica Neue';">     swap(a.memberA, b.memberA);</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">     swap(a.memberB, b.memberB);</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><font face="Helvetica Neue">     // swap other members </font><br/></div>
+<div><span style="font-family: 'Helvetica Neue';">}</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">and a non-member swap function that calls the public member one:</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">friend void swap(Foo&amp; a, Foo&amp; b)</span></div>
+<div><span style="font-family: 'Helvetica Neue';">{</span></div>
+<div><span style="font-family: 'Helvetica Neue';">     a.swap(b);</span></div>
+<div>}</div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">And then calling that swap method in the copy-assignment operator:</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">Foo&amp; operator=(Foo foo) // note the copying</span></div>
+<div><span style="font-family: 'Helvetica Neue';">{</span></div>
+<div><span style="font-family: 'Helvetica Neue';">     swap(*this, foo);</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">return *this</span></div>
+<div><span style="font-family: 'Helvetica Neue';">}</span></div>
+<div><br/></div>
+<div><span style="font-family: 'Helvetica Neue';">Moreover, if Foo is not a template class, you should <b>totally template specialize std::swap:</b></span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><font face="Helvetica Neue">namespace std</font></div>
+<div><span style="font-family: 'Helvetica Neue';">{</span></div>
+<div><span style="font-family: 'Helvetica Neue';">     template&lt;&gt;</span></div>
+<div><span style="font-family: 'Helvetica Neue';">     void swap&lt;Foo&gt;(Foo&amp; a, Foo&amp; b)</span></div>
+<div><span style="font-family: 'Helvetica Neue';">     {</span></div>
+<div><span style="font-family: 'Helvetica Neue';">          a.swap(b);<br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">     }</span></div>
+<div><span style="font-family: 'Helvetica Neue';">};</span></div>
+</div>
+<div><br/></div>
+</body></html>

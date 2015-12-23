@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="476.0074768066406"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-12-19 16:26:03 +0000"/><meta name="latitude" content="48.25678538630567"/><meta name="longitude" content="11.65505820578064"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-12-21 19:44:48 +0000"/><title>mutable lambda</title></head><body>
+<div>By default, by-value-captured data-members of a closure-class are const, because the call-operator (operator()) is declared const inside the produced closure class:</div>
+<div><br/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">x =</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">5</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">;<br/>
+<br/>
+[=] { ++x; }();</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// Not allowed, 'Cannot assign to a variable captured by copy in a non-mutable lambda'</span></div>
+<div><span style="font-family: Menlo;"><span style="font-size: 11px;">[x] { ++x; }(); <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// Not allowed, 'Cannot assign to a variable captured by copy in a non-mutable lambda'</span></span></span></div>
+<div><br/></div>
+<div>The rationale of the standard is that "a function object should produce the same result every time it’s called”. Workaround is to declare it “mutable”:</div>
+<div><br/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">x =</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">5</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">;<br/>
+<br/>
+[=] ()</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">mutable</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">{ ++x; } ();</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// OK</span></div>
+<div><span style="font-family: Menlo;"><span style="font-size: 11px;">[x] () <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">mutable</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">{ ++x; } ();</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// OK</span></span></span></div>
+<div><br/></div>
+<div>Side note: you must declare the empty parameter list ‘()’ before the mutable keyword, while you normally don’t need the empty parentheses if the lambda takes no arguments (as written above).</div>
+<div><br/></div>
+<div>Big Note: If the call operator is const, why can you write this code?</div>
+<div><br/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">x =</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">5</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">;<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">auto</span> <span style="font-style: normal; font-variant: normal; font-weight: normal; line-height: normal;"><span style="font-size: 11px;"><span style="font-family: Menlo;">f = [&amp;x] () { ++x; };<br/>
+<br/>
+f();<br/>
+<br/></span></span></span></div>
+<div><span style="font-family: Menlo;"><span style="font-size: 11px;">print::<span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">ln</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(x);</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// 6</span></span></span></div>
+<div><br/></div>
+<div>Isn’t the reference to x const in the call operator of the generated closure class? No, because when you write ++x, you are not modifying the <i>reference,</i> but the <i>referred value</i>. Understand for this that all references are inherently const, i.e. int&amp; x is conceptually like int&amp; const, making the reference unchangeable, just like int* const is <i>const pointer to an int</i>. However, int&amp; const does not exist because references are inherently const (you cannot re-point them to another variable). This means that modifying a value captured by reference is always allowed, because you are never modifying the reference, but the value that is referenced to (i.e. the const on the call operator has no effect).</div>
+</body></html>

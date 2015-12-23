@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="449.1571655273438"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-07-06 09:43:09 +0000"/><meta name="latitude" content="46.61396548825122"/><meta name="longitude" content="14.26305830985179"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-07-06 09:49:49 +0000"/><title>Integer or float to string</title></head><body>
+<div>std::string to_string(int/float value);</div>
+<div><br/></div>
+<div>or stringstreams</div>
+<div><br/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">float</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">value =</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">3.14</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">;<br/>
+   <br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">auto</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">str =</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">to_string</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(value);<br/>
+   <br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">cout</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;&lt; str &lt;&lt;</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">endl</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">;<br/>
+   <br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">ostringstream</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">os;<br/>
+   <br/>
+    os &lt;&lt; value;<br/>
+   <br/>
+    str = os.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">str</span><span style="font-style: normal; font-variant: normal; font-weight: normal;"><span style="font-size: 11px;"><span style="font-family: Menlo;">();<br/>
+   </span></span></span></div>
+<div><span style="font-family: Menlo;"><span style="font-size: 11px;">    <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">cout</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;&lt; str &lt;&lt;</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">endl</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">;</span></span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;"><br/></span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;"><br/></span></span></div>
+</body></html>

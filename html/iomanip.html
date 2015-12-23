@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="518"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-02-28 16:17:01 +0000"/><meta name="latitude" content="46.6285827611415"/><meta name="longitude" content="13.8244323726576"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-02-28 16:17:28 +0000"/><title>Iomanip</title></head><body>
+<div><br/></div>
+<div>
+<div><span style="font-family: 'Helvetica Neue';">#include &lt;iomanip&gt;</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">// sets the number of digits to x, integers that have more digits are left alone, floating point numbers</span></div>
+<div><span style="font-family: 'Helvetica Neue';">// are either rounded if x &gt; than total number of digits (before . and after) or else the whole number is shown in scientific notation</span></div>
+<div><span style="font-family: 'Helvetica Neue';">&lt;&lt; setprecision(x) &lt;&lt;</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">// setw (set width), specifies how wide the input should be at least, inputs that have a length greater</span></div>
+<div><span style="font-family: 'Helvetica Neue';">// than the specified values are left alone</span></div>
+<div><span style="font-family: 'Helvetica Neue';">&lt;&lt; setw(x) &lt;&lt;</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">// set alignment in accordance with setw, left to have the padding on the right and vice versa</span></div>
+<div><span style="font-family: 'Helvetica Neue';">&lt;&lt; setw(x) &lt;&lt; left &lt;&lt;</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">// sets the character that setw pads with, default is a space (if no setfill given)</span></div>
+<div><span style="font-family: 'Helvetica Neue';">&lt;&lt; setw(x) &lt;&lt; setfill(char)&lt;&lt;</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">// 1) sets universal stream precision to x and 2) returns previous stream precision</span></div>
+<div><span style="font-family: 'Helvetica Neue';">int previous = cout.precision(x)</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">char fillchar = cout.fill(char)</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">int widt = cout.width(x)</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">// sets base to x e.g. 10,8,16,2</span></div>
+<div><span style="font-family: 'Helvetica Neue';">&lt;&lt; setbase(x) &lt;&lt;</span></div>
+</div>
+<div><br/></div>
+</body></html>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="518"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-02-28 17:36:17 +0000"/><meta name="latitude" content="46.62858276367184"/><meta name="longitude" content="13.82443237304688"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-02-28 17:36:29 +0000"/><title>C++11</title></head><body>
+<div>
+<div><span style="font-family: 'Helvetica Neue';">The <b>auto</b> keyword can be used to make the compiler automatically deduce the type of an object from its initializer.</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">Instead of: std::map&lt;std::vector&lt;unsigned long&gt;, std::map&lt;unsigned short, long&gt;&gt;::const_iterator itr = map.begin()</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">Now use: auto itr = map.begin()</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';"><b>Range based for loops</b> are especially nice for iterating over containers:</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">std::vector&lt;int&gt; vec</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">for (auto itr : vec) { ++(*itr); }</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">The <b>override</b> identifier can be used to mark derived methods as overrides of base class virtual functions. The <b>final</b>  identifier makes it impossible for derived classes to implement a certain virtual method.</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">class A</span></div>
+<div><span style="font-family: 'Helvetica Neue';">{</span></div>
+<div><span style="font-family: 'Helvetica Neue';">public:</span></div>
+<div><span style="font-family: 'Helvetica Neue';">     virtual void foo();</span></div>
+<div><span style="font-family: 'Helvetica Neue';">};</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">class B : public A</span></div>
+<div><span style="font-family: 'Helvetica Neue';">{</span></div>
+<div><span style="font-family: 'Helvetica Neue';">public:</span></div>
+<div><span style="font-family: 'Helvetica Neue';">     virtual void foo() override final; // makes compiler know that this is an override, will check for correct types; makes it impossible for derived classes to override that method</span></div>
+<div><span style="font-family: 'Helvetica Neue';">};</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">class C : public B</span></div>
+<div><span style="font-family: 'Helvetica Neue';">{</span></div>
+<div><span style="font-family: 'Helvetica Neue';">public:</span></div>
+<div><span style="font-family: 'Helvetica Neue';">     virtual void foo(); // Error! B marked foo() as final!</span></div>
+<div><span style="font-family: 'Helvetica Neue';">};</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">To set certain functions to their C++ default, use the <b>default</b> keyword after functions. E.g., for default constructors that you still want to have defined (for smart pointers for example) but don’t want to have any custom implementation:</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">~Foo() = default;</span></div>
+</div>
+<div><br/></div>
+</body></html>

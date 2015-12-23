@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="479"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-11-12 22:27:26 +0000"/><meta name="latitude" content="48.25692220512342"/><meta name="longitude" content="11.65499735678323"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-11-12 22:29:29 +0000"/><title>throw without argument</title></head><body>
+<div>In the catch scope of a try-catch block, you can write ‘throw’ without an exception argument and C++ will re-throw the exception. Moreover, the exception will not be copied (the exact same object is re-thrown) and its dynamic type is conserved (no slicing).</div>
+<div><br/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">try</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">throw</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">std::runtime_error(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #43d34b">"asdf"</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">);<br/>
+}<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">catch</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(...)<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">throw</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">;</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// throw std::runtime_error("asdf");</span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">}</span></span></div>
+</body></html>

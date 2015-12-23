@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="478.6452941894531"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-09-10 21:39:02 +0000"/><meta name="latitude" content="48.25689622005716"/><meta name="longitude" content="11.65522811923001"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-09-10 21:39:12 +0000"/><title>Operator Precedence</title></head><body>
+<table style="font-size: 13px; background-color: rgb(249, 249, 249); border: 1px solid rgb(170, 170, 170); border-collapse: collapse; color: rgb(0, 0, 0); font-family: 'DejaVu Sans', arial, sans-serif; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-stroke-width: 0px;">
+<tr>
+<th style="border: 1px solid rgb(170, 170, 170); padding: 0.2em; background-color: rgb(242, 242, 242); text-align: left;">Precedence</th>
+<th style="border: 1px solid rgb(170, 170, 170); padding: 0.2em; background-color: rgb(242, 242, 242); text-align: left;">Operator</th>
+<th style="border: 1px solid rgb(170, 170, 170); padding: 0.2em; background-color: rgb(242, 242, 242); text-align: left;">Description</th>
+<th style="border: 1px solid rgb(170, 170, 170); padding: 0.2em; background-color: rgb(242, 242, 242); text-align: left;">Associativity</th>
+</tr>
+<tr>
+<th style="border: 1px solid rgb(170, 170, 170); padding: 0.2em; background-color: rgb(242, 242, 242); text-align: center;">1</th>
+<td style="border: 1px solid rgb(170, 170, 170); padding: 0.2em;"><code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">::</code></td>
+<td style="border: 1px solid rgb(170, 170, 170); padding: 0.2em;"><a title="cpp/language/identifiers" style="text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;">Scope resolution</a></td>
+<td rowspan="7" style="border: 1px solid rgb(170, 170, 170); padding: 0.2em; vertical-align: top;">Left-to-right</td>
+</tr>
+<tr>
+<th rowspan="6" style="border: 1px solid rgb(170, 170, 170); padding: 0.2em; background-color: rgb(242, 242, 242); text-align: center;">2</th>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: solid solid none; padding: 0.2em;"><code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">++</code>   <code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">--</code></td>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: solid solid none; padding: 0.2em;">Suffix/postfix <a title="cpp/language/operator incdec" style="text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;">increment and decrement</a></td>
+</tr>
+<tr>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: none solid; padding: 0.2em;"><code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;"><i>type</i>()</code>  <code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;"><i>type</i>{}</code></td>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: none solid; padding: 0.2em;"><a title="cpp/language/explicit cast" style="text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;">Function-style cast</a></td>
+</tr>
+<tr>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: none solid; padding: 0.2em;"><code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">()</code></td>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: none solid; padding: 0.2em;"><a title="cpp/language/operator other" style="text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;">Function call</a></td>
+</tr>
+<tr>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: none solid; padding: 0.2em;"><code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">[]</code></td>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: none solid; padding: 0.2em;"><a title="cpp/language/operator member access" style="text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;">Array subscripting</a></td>
+</tr>
+<tr>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: none solid; padding: 0.2em;"><code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">.</code></td>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: none solid; padding: 0.2em;"><a title="cpp/language/operator member access" style="text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;">Member access</a></td>
+</tr>
+<tr>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: none solid; padding: 0.2em;"><code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">-&gt;</code></td>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: none solid; padding: 0.2em;"><a title="cpp/language/operator member access" style="text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;">Member access</a> through pointer</td>
+</tr>
+<tr>
+<th rowspan="9" style="border: 1px solid rgb(170, 170, 170); padding: 0.2em; background-color: rgb(242, 242, 242); text-align: center;">3</th>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: solid solid none; padding: 0.2em;"><code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">++</code>   <code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">--</code></td>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: solid solid none; padding: 0.2em;">Prefix <a title="cpp/language/operator incdec" style="text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;">increment and decrement</a></td>
+<td rowspan="9" style="border: 1px solid rgb(170, 170, 170); padding: 0.2em; vertical-align: top;">Right-to-left</td>
+</tr>
+<tr>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: none solid; padding: 0.2em;"><code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">+</code>   <code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">-</code></td>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: none solid; padding: 0.2em;">Unary <a title="cpp/language/operator arithmetic" style="text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;">plus and minus</a></td>
+</tr>
+<tr>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: none solid; padding: 0.2em;"><code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">!</code>   <code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">~</code></td>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: none solid; padding: 0.2em;"><a title="cpp/language/operator logical" style="text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;">Logical NOT</a> and <a title="cpp/language/operator arithmetic" style="text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;">bitwise NOT</a></td>
+</tr>
+<tr>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: none solid; padding: 0.2em;"><code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">(<i>type</i>)</code></td>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: none solid; padding: 0.2em;">C-style <a title="cpp/language/explicit cast" style="text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;">explicit cast</a></td>
+</tr>
+<tr>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: none solid; padding: 0.2em;"><code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">*</code></td>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: none solid; padding: 0.2em;"><a title="cpp/language/operator member access" style="text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;">Indirection</a> (dereference)</td>
+</tr>
+<tr>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: none solid; padding: 0.2em;"><code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">&amp;</code></td>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: none solid; padding: 0.2em;"><a title="cpp/language/operator member access" style="text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;">Address-of</a></td>
+</tr>
+<tr>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: none solid; padding: 0.2em;"><code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">sizeof</code></td>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: none solid; padding: 0.2em;"><a title="cpp/language/sizeof" style="text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;">Size-of</a><sup style="unicode-bidi: -webkit-isolate; font-weight: normal; font-style: normal;"><a style="text-decoration: none; color: rgb(11, 0, 128); background-image: none; white-space: nowrap; background-position: initial initial; background-repeat: initial initial;">[note 1]</a></sup></td>
+</tr>
+<tr>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: none solid; padding: 0.2em;"><code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">new</code>, <code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">new[]</code></td>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: none solid; padding: 0.2em;"><a title="cpp/language/new" style="text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;">Dynamic memory allocation</a></td>
+</tr>
+<tr>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: none solid solid; padding: 0.2em;"><code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">delete</code>, <code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">delete[]</code></td>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: none solid solid; padding: 0.2em;"><a title="cpp/language/delete" style="text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;">Dynamic memory deallocation</a></td>
+</tr>
+<tr>
+<th style="border: 1px solid rgb(170, 170, 170); padding: 0.2em; background-color: rgb(242, 242, 242); text-align: center;">4</th>
+<td style="border: 1px solid rgb(170, 170, 170); padding: 0.2em;"><code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">.*</code>   <code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">-&gt;*</code></td>
+<td style="border: 1px solid rgb(170, 170, 170); padding: 0.2em;"><a title="cpp/language/operator member access" style="text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;">Pointer to member</a></td>
+<td rowspan="12" style="border: 1px solid rgb(170, 170, 170); padding: 0.2em; vertical-align: top;">Left-to-right</td>
+</tr>
+<tr>
+<th style="border: 1px solid rgb(170, 170, 170); padding: 0.2em; background-color: rgb(242, 242, 242); text-align: center;">5</th>
+<td style="border: 1px solid rgb(170, 170, 170); padding: 0.2em;"><code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">*</code>   <code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">/</code>   <code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">%</code></td>
+<td style="border: 1px solid rgb(170, 170, 170); padding: 0.2em;"><a title="cpp/language/operator arithmetic" style="text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;">Multiplication, division, and remainder</a></td>
+</tr>
+<tr>
+<th style="border: 1px solid rgb(170, 170, 170); padding: 0.2em; background-color: rgb(242, 242, 242); text-align: center;">6</th>
+<td style="border: 1px solid rgb(170, 170, 170); padding: 0.2em;"><code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">+</code>   <code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">-</code></td>
+<td style="border: 1px solid rgb(170, 170, 170); padding: 0.2em;"><a title="cpp/language/operator arithmetic" style="text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;">Addition and subtraction</a></td>
+</tr>
+<tr>
+<th style="border: 1px solid rgb(170, 170, 170); padding: 0.2em; background-color: rgb(242, 242, 242); text-align: center;">7</th>
+<td style="border: 1px solid rgb(170, 170, 170); padding: 0.2em;"><code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">&lt;&lt;</code>   <code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">&gt;&gt;</code></td>
+<td style="border: 1px solid rgb(170, 170, 170); padding: 0.2em;">Bitwise <a title="cpp/language/operator arithmetic" style="text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;">left shift and right shift</a></td>
+</tr>
+<tr>
+<th rowspan="2" style="border: 1px solid rgb(170, 170, 170); padding: 0.2em; background-color: rgb(242, 242, 242); text-align: center;">8</th>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: solid solid none; padding: 0.2em;"><code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">&lt;</code>   <code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">&lt;=</code></td>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: solid solid none; padding: 0.2em;">For <a title="cpp/language/operator comparison" style="text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;">relational operators</a> &lt; and ≤ respectively</td>
+</tr>
+<tr>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: none solid solid; padding: 0.2em;"><code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">&gt;</code>   <code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">&gt;=</code></td>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: none solid solid; padding: 0.2em;">For <a title="cpp/language/operator comparison" style="text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;">relational operators</a> &gt; and ≥ respectively</td>
+</tr>
+<tr>
+<th style="border: 1px solid rgb(170, 170, 170); padding: 0.2em; background-color: rgb(242, 242, 242); text-align: center;">9</th>
+<td style="border: 1px solid rgb(170, 170, 170); padding: 0.2em;"><code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">==</code>   <code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">!=</code></td>
+<td style="border: 1px solid rgb(170, 170, 170); padding: 0.2em;">For <a title="cpp/language/operator comparison" style="text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;">relational operators</a> = and ≠ respectively</td>
+</tr>
+<tr>
+<th style="border: 1px solid rgb(170, 170, 170); padding: 0.2em; background-color: rgb(242, 242, 242); text-align: center;">10</th>
+<td style="border: 1px solid rgb(170, 170, 170); padding: 0.2em;"><code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">&amp;</code></td>
+<td style="border: 1px solid rgb(170, 170, 170); padding: 0.2em;"><a title="cpp/language/operator arithmetic" style="text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;">Bitwise AND</a></td>
+</tr>
+<tr>
+<th style="border: 1px solid rgb(170, 170, 170); padding: 0.2em; background-color: rgb(242, 242, 242); text-align: center;">11</th>
+<td style="border: 1px solid rgb(170, 170, 170); padding: 0.2em;"><code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">^</code></td>
+<td style="border: 1px solid rgb(170, 170, 170); padding: 0.2em;"><a title="cpp/language/operator arithmetic" style="text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;">Bitwise XOR</a> (exclusive or)</td>
+</tr>
+<tr>
+<th style="border: 1px solid rgb(170, 170, 170); padding: 0.2em; background-color: rgb(242, 242, 242); text-align: center;">12</th>
+<td style="border: 1px solid rgb(170, 170, 170); padding: 0.2em;"><code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">|</code></td>
+<td style="border: 1px solid rgb(170, 170, 170); padding: 0.2em;"><a title="cpp/language/operator arithmetic" style="text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;">Bitwise OR</a> (inclusive or)</td>
+</tr>
+<tr>
+<th style="border: 1px solid rgb(170, 170, 170); padding: 0.2em; background-color: rgb(242, 242, 242); text-align: center;">13</th>
+<td style="border: 1px solid rgb(170, 170, 170); padding: 0.2em;"><code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">&amp;&amp;</code></td>
+<td style="border: 1px solid rgb(170, 170, 170); padding: 0.2em;"><a title="cpp/language/operator logical" style="text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;">Logical AND</a></td>
+</tr>
+<tr>
+<th style="border: 1px solid rgb(170, 170, 170); padding: 0.2em; background-color: rgb(242, 242, 242); text-align: center;">14</th>
+<td style="border: 1px solid rgb(170, 170, 170); padding: 0.2em;"><code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">||</code></td>
+<td style="border: 1px solid rgb(170, 170, 170); padding: 0.2em;"><a title="cpp/language/operator logical" style="text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;">Logical OR</a></td>
+</tr>
+<tr>
+<th rowspan="7" style="border: 1px solid rgb(170, 170, 170); padding: 0.2em; background-color: rgb(242, 242, 242); text-align: center;">15</th>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: solid solid none; padding: 0.2em;"><code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">?:</code></td>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: solid solid none; padding: 0.2em;"><a title="cpp/language/operator other" style="text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;">Ternary conditional</a><sup style="unicode-bidi: -webkit-isolate; font-weight: normal; font-style: normal;"><a style="text-decoration: none; color: rgb(11, 0, 128); background-image: none; white-space: nowrap; background-position: initial initial; background-repeat: initial initial;">[note 2]</a></sup></td>
+<td rowspan="7" style="border: 1px solid rgb(170, 170, 170); padding: 0.2em; vertical-align: top;">Right-to-left</td>
+</tr>
+<tr>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: none solid; padding: 0.2em;"><code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">throw</code></td>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: none solid; padding: 0.2em;"><a title="cpp/language/throw" style="text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;">throw operator</a></td>
+</tr>
+<tr>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: none solid; padding: 0.2em;"><code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">=</code></td>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: none solid; padding: 0.2em;"><a title="cpp/language/operator assignment" style="text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;">Direct assignment</a> (provided by default for C++ classes)</td>
+</tr>
+<tr>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: none solid; padding: 0.2em;"><code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">+=</code>   <code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">-=</code></td>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: none solid; padding: 0.2em;"><a title="cpp/language/operator assignment" style="text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;">Compound assignment</a> by sum and difference</td>
+</tr>
+<tr>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: none solid; padding: 0.2em;"><code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">*=</code>   <code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">/=</code>   <code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">%=</code></td>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: none solid; padding: 0.2em;"><a title="cpp/language/operator assignment" style="text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;">Compound assignment</a> by product, quotient, and remainder</td>
+</tr>
+<tr>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: none solid; padding: 0.2em;"><code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">&lt;&lt;=</code>   <code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">&gt;&gt;=</code></td>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: none solid; padding: 0.2em;"><a title="cpp/language/operator assignment" style="text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;">Compound assignment</a> by bitwise left shift and right shift</td>
+</tr>
+<tr>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: none solid solid; padding: 0.2em;"><code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">&amp;=</code>   <code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">^=</code>   <code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">|=</code></td>
+<td style="border-width: 1px; border-color: rgb(170, 170, 170); border-style: none solid solid; padding: 0.2em;"><a title="cpp/language/operator assignment" style="text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;">Compound assignment</a> by bitwise AND, XOR, and OR</td>
+</tr>
+<tr>
+<th style="border: 1px solid rgb(170, 170, 170); padding: 0.2em; background-color: rgb(242, 242, 242); text-align: center;">16</th>
+<td style="border: 1px solid rgb(170, 170, 170); padding: 0.2em;"><code style="font-family: 'DejaVu Sans Mono', courier, monospace !important; background-color: transparent;">,</code></td>
+<td style="border: 1px solid rgb(170, 170, 170); padding: 0.2em;"><a title="cpp/language/operator other" style="text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;">Comma</a></td>
+<td style="border: 1px solid rgb(170, 170, 170); padding: 0.2em;">Left-to-right</td>
+</tr>
+</table>
+</body></html>

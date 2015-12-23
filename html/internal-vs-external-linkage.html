@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-09-15 12:00:04 +0000"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-09-15 13:03:07 +0000"/><title>internal vs external linkage</title></head><body>
+<div>A translation unit refers to an implementation file and all header files it includes. If an object or function inside such a translation unit has internal linkage, it is only accessible within that translation unit. If an object or function has external linkage, it is also accessible from other translation units. The ‘static’ keyword, when used in the global namespace, forces an object or function to have internal linkage. The ‘extern’ keyword results in an object having external linkage.</div>
+<div><br/></div>
+<div>Non-const global variables have external linkage by default. Const global variables have internal linkage by default.</div>
+<div><br/></div>
+<div>The most important cases in which linkage is important is for global variables and for static variables.</div>
+<div><br/></div>
+<div>The common idiom to create a global variable is to declare it in one header with the ‘extern’ keyword, which tells the compiler that this variable has external linkage and that is defined in some other translation unit (where it is accessible due to the extern). You then define the variable in <b>one</b> and only one implementation file. If you didn’t specify the extern keyword and would just declare and define the variable in the header directly, then that would incur multiple definitions of the same symbol. The reason why is that #include-ing the file in each implementation file would result in the same definition (#include just copy-pastes).</div>
+<div><br/></div>
+<div>The static keyword in the global scope (totally different from function/class/block scope) means that a variable or function will only be accessible from the current translation unit. This does <i>not</i> that the variable is private to the translation unit, it only means that each translation unit (each implementation file in which the header with the static variable is included) will receive its own copy of the variable:</div>
+<div><br/></div>
+<div>header.hpp</div>
+<div>...</div>
+<div>static int variable = 0;</div>
+<div>...</div>
+<div><br/></div>
+<div>file1.cpp</div>
+<div>#include “header.hpp"</div>
+<div>void function1()</div>
+<div>{</div>
+<div>     variable = 10;</div>
+<div>}</div>
+<div><br/></div>
+<div><br/></div>
+<div>file2.cpp</div>
+<div>#include “header.hpp"</div>
+<div>
+<div>void function2()</div>
+</div>
+<div>{</div>
+<div>     variable = 123;</div>
+<div>}</div>
+<div><br/></div>
+<div>If you now were to include file1.hpp and file2.hpp and header.hpp and call function1() and function()2, you would see that the variable from header.hpp is not changed, while the respective copies of the variable in file1.hpp/cpp and file2.hpp/cpp did indeed change. </div>
+<div><br/></div>
+<div>The proper way to do this, though, is to use an anonymous namespace, which also forces internal linkage:</div>
+<div><br/></div>
+<div>namespace</div>
+<div>{</div>
+<div>     int variable = 0;</div>
+<div>}</div>
+<div><br/></div>
+<div>equivalent to:</div>
+<div><br/></div>
+<div>static int variable = 0;</div>
+</body></html>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="518"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-02-28 16:30:52 +0000"/><meta name="latitude" content="46.62858276367184"/><meta name="longitude" content="13.82443237304688"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-02-28 16:48:42 +0000"/><title>Clearing an std::stringstream</title></head><body>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">std::string s(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #43d34b">"10 25"</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">);<br/>
+std::string t(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #43d34b">"34"</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">);<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">a;<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">b;<br/>
+<br/>
+std::stringstream ss;<br/>
+<br/>
+ss &lt;&lt; s;<br/>
+<br/>
+ss &gt;&gt; a;</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// a is 10 and extracted from ss</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// stringstream not cleared</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+<br/>
+ss &lt;&lt; t;</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// t is "added"</span><span style="font-style: normal; font-variant: normal; font-weight: normal; line-height: normal;"><span style="font-size: 11px;"><span style="font-family: Menlo;"><br/>
+<br/></span></span></span></div>
+<div><span style="font-family: Menlo;"><span style="font-size: 11px;">ss &gt;&gt; b; <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// b is 2534 (25 still inside)</span></span></span></div>
+<div>
+<hr/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">std::string s(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #43d34b">"10 25"</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">);<br/>
+std::string t(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #43d34b">"34"</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">);<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">a;<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">b;<br/>
+<br/>
+std::stringstream ss;<br/>
+<br/>
+ss &lt;&lt; s;<br/>
+<br/>
+ss &gt;&gt; a;</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// a is 10 and extracted from ss</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+<br/>
+ss.clear();</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// clears error states (EOF if s had ended here)</span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;"><br/></span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">ss.str(std::string()); <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// Reset stream to empty string (could also insert t directly)</span></span></span></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+ss &lt;&lt; t;</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// t is "added"</span><span style="font-style: normal; font-variant: normal; font-weight: normal; line-height: normal;"><span style="font-size: 11px;"><span style="font-family: Menlo;"><br/>
+<br/></span></span></span></div>
+<div><span style="font-family: Menlo;"><span style="font-size: 11px;">ss &gt;&gt; b; <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// b is 34</span></span></span></div>
+<div><br/></div>
+</body></html>

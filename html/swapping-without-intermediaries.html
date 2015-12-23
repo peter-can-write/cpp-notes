@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="keywords" content="C++, Problem, Puzzle"/><meta name="created" content="2015-10-17 17:14:01 +0000"/><meta name="updated" content="2015-10-17 17:14:04 +0000"/><title>Swapping without intermediaries</title></head><body>
+<!-- Sublime:LS0tCnRpdGxlOiBTd2FwcGluZyB3aXRob3V0IGludGVybWVkaWFyaWVzCm5vdGVib29rOiBDKysKdGFnczpDKyssIFByb2JsZW0sIFB1enpsZQotLS0KClRoZXJlIGFyZSB0d28gbWV0aG9kcyBvZiBzd2FwcGluZyB0d28gdmFsdWVzIGBhYCBhbmQgYGJgIHdpdGhvdXQgaW50ZXJtZWRpYXJpZXM6CgoxLiBVc2luZyBhZGRpdGlvbgoyLiBVc2luZyBYT1IvYml0LW1hbmlwdWxhdGlvbgoKSW4gYm90aCBtZXRob2RzLCB0aGUgaWRlYSBpcyB0byBzdG9yZSBgYmAgaW4gYGFgLCB0aGVuIHRha2UgYGJgIG91dCBvZiB0aGlzIGNvbW1vbmcgdmFsdWUsIGxlYXZpbmcgYGFgICh0aGUgbmV3IGBiYCksIHRoZW4gdGFraW5nIHRoZSBuZXcgYGJgICh0aGUgb2xkIGBhYCkgb3V0IG9mIHRoZSBjb21tb24gdmFsdWUsIGxlYXZpbmcgdGhlIG9sZCBgYmAgZm9yIHRoZSBuZXcgYGFgLgoKYGBgQysrCmludCB4ID0gNTsKaW50IHkgPSAxMDsKCi8vVW5zZXF1ZW5jZWQ6IHggLT0geSA9ICh4ICs9IHkpIC0geTsKeCArPSB5Owp5ID0geCAtIHk7CnggLT0geTsKCi8vIFVuc2VxdWVuY2VkOiB4IF49IHkgXj0geCBePSB5Owp4IF49IHk7CnkgPSB4IF4geTsKeCBePSB5OwoKLy8gQWZ0ZXIgc3dhcHBpbmcgdHdpY2UgeCBzaG91bGQgYmUgNSBhbmQgeSBzaG91bGQgYmUgMTAKcHJpbnQ6OmxuKHgsIHkpOwpgYGA=-->
+<p>There are two methods of swapping two values <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">a</code> and <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">b</code> without intermediaries:</p>
+
+<ol>
+<li>Using addition</li>
+<li>Using XOR/bit-manipulation</li>
+</ol>
+
+<p>In both methods, the idea is to store <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">b</code> in <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">a</code>, then take <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">b</code> out of this commong value, leaving <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">a</code> (the new <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">b</code>), then taking the new <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">b</code> (the old <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">a</code>) out of the common value, leaving the old <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">b</code> for the new <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">a</code>.</p>
+
+<pre title="C++" style="color: #000000; font-family: monospace,monospace; font-size: 0.9em; white-space: pre-wrap; word-wrap: break-word; border: 1px solid #cccccc; border-radius: 3px; overflow: auto; padding: 6px 10px; margin-bottom: 10px;background-color:#ffffff;"><code style="color: black; font-family: monospace,monospace; font-size: 0.9em;"><span style="color: #AA0D92">int</span> <span style="color: #000000">x</span> <span style="color: #000000">=</span> <span style="color: #2300CE">5</span>;
+<span style="color: #AA0D92">int</span> <span style="color: #000000">y</span> <span style="color: #000000">=</span> <span style="color: #2300CE">10</span>;
+
+<span style="color: #177500">//Unsequenced: x -= y = (x += y) - y;</span>
+<span style="color: #000000">x</span> <span style="color: #000000">+=</span> <span style="color: #000000">y</span>;
+<span style="color: #000000">y</span> <span style="color: #000000">=</span> <span style="color: #000000">x</span> <span style="color: #000000">-</span> <span style="color: #000000">y</span>;
+<span style="color: #000000">x</span> <span style="color: #000000">-=</span> <span style="color: #000000">y</span>;
+
+<span style="color: #177500">// Unsequenced: x ^= y ^= x ^= y;</span>
+<span style="color: #000000">x</span> <span style="color: #000000">^=</span> <span style="color: #000000">y</span>;
+<span style="color: #000000">y</span> <span style="color: #000000">=</span> <span style="color: #000000">x</span> <span style="color: #000000">^</span> <span style="color: #000000">y</span>;
+<span style="color: #000000">x</span> <span style="color: #000000">^=</span> <span style="color: #000000">y</span>;
+
+<span style="color: #177500">// After swapping twice x should be 5 and y should be 10</span>
+<span style="color: #000000">print::ln</span>(<span style="color: #000000">x</span>, <span style="color: #000000">y</span>);
+</code></pre>
+</body></html>

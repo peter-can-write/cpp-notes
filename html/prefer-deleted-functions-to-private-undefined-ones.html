@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="478.5134887695312"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-11-02 21:13:57 +0000"/><meta name="latitude" content="48.25686406198103"/><meta name="longitude" content="11.6550894770675"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-11-02 21:32:34 +0000"/><title>Prefer deleted functions to private-undefined ones</title></head><body>
+<div>In C++98, when you wanted to prevent a user to use a certain compiler-generated method (e.g. Copy-constructor, copy-assignment-operator etc.), you would make it private (so that outsiders couldn’t use it) and not define it (so that there would be a linker error if internally you tried to use it — or friends):</div>
+<div><br/></div>
+<div>class Example</div>
+<div>{</div>
+<div>public:</div>
+<div>     void foo();    </div>
+<div>private:</div>
+<div>     Example(const Example&amp; other); // not defined</div>
+<div>     Example&amp; operator=(const Example&amp; other); // not defined</div>
+<div>};</div>
+<div><br/></div>
+<div>That’s quite a hack and also not very favorable as it only complains at link-time in the worst case. The more modern, C++11 solution is to use the “delete" keyword. When you say “&lt;R&gt; function(&lt;T&gt;) = delete;”, you explicitly declare the function as deleted and the compiler will complain when you try to call it. Here <b>it is important to make those deleted member functions public</b>, because a compiler will check accessibility before deletion-status, meaning if you declare the function private and delete it, then try to call it from outside the class, the compiler will generate an error for accessing a private function. This is less expressive as if it had generated an error for the function being deleted, so <b>declare the function public</b>.</div>
+<div><br/></div>
+<div>There are two more important use-cases for the <i>delete</i> keyword: non-member functions and template functions. For the former, it can be quite nice to avoid certain unwanted overloads via explicit deletions. Imagine you have such a function:</div>
+<div><br/></div>
+<div>void function(int x);</div>
+<div><br/></div>
+<div>Where you would really like the x to be an integer — not a double, float, bool, char, but an <i>int</i>. You can achieve this by deleting the respective overloads:</div>
+<div><br/></div>
+<div>void function(int x); // same as before</div>
+<div><br/></div>
+<div>void function(bool) = delete; // rejects bools</div>
+<div><br/></div>
+<div>void function(double) = delete; // rejects floats and doubles (double-overload preferred over int for float)</div>
+<div><br/></div>
+<div>void function(char) = delete; // reject chars</div>
+<div><br/></div>
+<div>When calling the function with any of those unwanted types, overload resolution will direct the call to the respective overload. This then produces a compiler-error because those functions were deleted.</div>
+<div><br/></div>
+<div>The second use-case is for removing some unwanted specializations of a template (like specialization, but in the opposite direction). Say you have a template function for processing pointers, but do not want to have the function take char*, because that points to a string, or void*, because you can’t do much with it. You can delete the unwanted specializations for char* and void*:</div>
+<div><br/></div>
+<div>template&lt;typename T&gt;</div>
+<div>void process_pointer(T* pointer)</div>
+<div>{</div>
+<div>     /* … */</div>
+<div>}</div>
+<div><br/></div>
+<div>template&lt;&gt;</div>
+<div>void process_pointer&lt;char&gt;(char* pointer) = delete; // no want</div>
+<div><br/></div>
+<div>template&lt;&gt;</div>
+<div>void process_pointer&lt;void&gt;(void* pointer) = delete; // no want</div>
+<div><br/></div>
+<div><b>This is especially important because you can’t delete some specializations with the private-undefined method, as it is required that all specializations of a template function have the same access-specifier as the base template!</b></div>
+<div><b><br/></b></div>
+<div>Note also that the function specialization above is equivalent to making a non-template overload and deleting it:</div>
+<div><br/></div>
+<div>void process_pointer(void* pointer) = delete; // Same thing</div>
+</body></html>

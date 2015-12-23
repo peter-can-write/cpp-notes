@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="478.9944458007812"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-11-13 15:36:57 +0000"/><meta name="latitude" content="48.25689982145342"/><meta name="longitude" content="11.65503190196374"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-11-13 15:39:51 +0000"/><title>References in containers</title></head><body>
+<div>You thought it was not possible to use references in standard containers:</div>
+<div> </div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font-style: normal; font-variant: normal; font-weight: normal; line-height: normal;"><span style="font-size: 11px;"><span style="font-family: Menlo;">x;<br/>
+<br/></span></span></span></div>
+<div><span style="font-family: Menlo;"><span style="font-size: 11px;">std::vector&lt;<span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&amp;&gt; v = {x};</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// goes insane with errors</span></span></span></div>
+<div><br/></div>
+<div>However, you can use a std::reference_wrapper&lt;T&gt;:</div>
+<div><br/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">x;<br/>
+<br/></span></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">vector</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">reference_wrapper</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&gt;&gt; v = {x};</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// works</span></div>
+<div><br/></div>
+<div>std::reference_wrapper&lt;T&gt; is also what the function std::ref(argument) returns.</div>
+</body></html>

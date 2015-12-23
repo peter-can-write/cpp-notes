@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="518"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-02-28 17:08:53 +0000"/><meta name="latitude" content="46.62858276367184"/><meta name="longitude" content="13.82443237304688"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-05-19 20:15:26 +0000"/><title>Function pointers</title></head><body>
+<div><span style="font-family: 'Helvetica Neue';">Type of pointer is the return type, then the name of the pointer and then the <b>argument types.</b></span></div>
+<div>
+<div><span style="font-family: 'Helvetica Neue';"><b><br/></b></span></div>
+<div><span style="font-family: 'Helvetica Neue';">int * func (int, double);</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">Is a pointer to a function <b>func </b>returning int and taking arguments of type int and double.</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">You don’t need to take the memory address or dereference functions, because you can only call a function or take it’s address again.</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">int func(int x) { return x; };</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">int * pointer_to_func (int) = func; // &amp; not necessary</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+</div>
+<div><span style="font-family: 'Helvetica Neue';">pointer_to_func(5); // * not necessary</span></div>
+<div><br/></div>
+</body></html>

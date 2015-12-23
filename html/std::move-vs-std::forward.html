@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="518"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-04-17 12:02:13 +0000"/><meta name="latitude" content="46.62854766845701"/><meta name="longitude" content="13.82443237304687"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-04-17 12:04:40 +0000"/><title>std::move vs std::forward</title></head><body>
+<div>std::move is similar to std::forward, as both are just casts.</div>
+<div><br/></div>
+<div>std::move casts an object to an rvalue reference of the same type. It also denotes that the original object should no longer be used.</div>
+<div><br/></div>
+<div>std::forward lets you specify to what to cast the object to, and is used mostly for perfect forwarding.</div>
+<div><br/></div>
+<div>std::move(var) is the same as std::forward&lt;T&amp;&amp;&gt;(var), where T is the type of var.</div>
+</body></html>

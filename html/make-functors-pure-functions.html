@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-09-13 16:27:53 +0000"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-09-13 16:45:54 +0000"/><title>Make functors pure functions</title></head><body>
+<div>A <i>pure function</i> is a function whose return values depend only on its arguments. If <i>f</i>  is a pure function and <i>x</i> and <i>y</i> are its parameters, the return value of <i>f(x, y)</i> can change only if the value of <i>x</i> or <i>y</i> changes. </div>
+<div><br/></div>
+<div>Many algorithms copy functions, thus if a functors return value depends on its state, the results may be unexpected, as the state will be reset to the initial state after every copy (unless appropriate copy constructors have been implemented).</div>
+<div><br/></div>
+<div>To enforce this, mark the call operators of your functors <b><i>const</i></b>.</div>
+</body></html>

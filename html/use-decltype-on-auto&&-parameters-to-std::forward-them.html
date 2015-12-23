@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="475.9931335449219"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-12-21 19:44:50 +0000"/><meta name="latitude" content="48.25678491273872"/><meta name="longitude" content="11.65505758659513"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-12-21 19:52:27 +0000"/><title>Use decltype on auto&amp;&amp; parameters to std::forward them</title></head><body>
+<div>So you wanna write one of these lambdas:</div>
+<div><br/></div>
+<div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">void</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">f(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&amp; x) { }<br/>
+<br/></span></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">void</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">f(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&amp;&amp; x) { }</span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;"><br/></span></span></div>
+</div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">auto</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">lambda = [] (</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">auto</span><span style="font-style: normal; font-variant: normal; font-weight: normal;"><span style="font-size: 11px;"><span style="font-family: Menlo;">&amp;&amp; x) { f(x); };</span></span></span></div>
+<div><br/></div>
+<div>But consider the call to f(x). It’s not right, because the parameter should be perfect-forwarded — it’ll always call the overload taking an lvalue reference. So how to forward them? Answer, use decltype:</div>
+<div><br/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">auto</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">lambda = [] (</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">auto</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&amp;&amp; x) { f(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::forward&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">decltype</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(x)&gt;(x)); };</span></div>
+<div><br/></div>
+<div>Template collapsing rules will ensure that even if decltype(x) yields an rvalue reference in the call to std::forward:</div>
+<div><br/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">std::forward&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&amp;&amp;&gt;(x)</span></div>
+<div><br/></div>
+<div>The result will be equivalent to</div>
+<div><br/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">std::forward&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&gt;(x)</span></div>
+<div><br/></div>
+<div>Because std::forward removes the reference. Also works for variadic auto arguments:</div>
+<div><br/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">auto</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">lambda = [] (</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">auto</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&amp;&amp;... x) { f(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::forward&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">decltype</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(x)&gt;(x)...); };</span></div>
+<div><br/></div>
+</body></html>

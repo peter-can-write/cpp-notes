@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="518"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-02-28 17:20:51 +0000"/><meta name="latitude" content="46.62858276367184"/><meta name="longitude" content="13.82443237304688"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-10-27 01:00:07 +0000"/><title>Lambdas</title></head><body>
+
+	<div>
+
+		<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">[ input capture ] ( parameters ) { something; }</span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">For input capture:</span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">[&amp;] take closure by reference</span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">[=] take closure by value</span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">[=, &amp;var] // Take by value by default, but take the variable “var" by reference</span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">E.g.</span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">[&amp;] (int d) { return d*d; }</span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">Usually the return type is derived automatically, however you can specify it like so:</span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">[&amp;] (int d) <b>-&gt; double</b> { return d*d; } // now returns double</span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">For example, you might need a functor to use std::for_each</span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">char str [] = “hello”;</span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">Then, you can just use a lambda for the function:</span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">std::for_each(str, str + 5, [&amp;] (char&amp; c) { c++; });</span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">std::cout &lt;&lt; str &lt;&lt; std::endl;</span></div>
+
+		<div><br/></div>
+
+	</div>
+
+	<div><br/></div>
+
+
+
+</body></html>

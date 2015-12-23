@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="479"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-10-18 16:22:55 +0000"/><meta name="latitude" content="48.25692535999998"/><meta name="longitude" content="11.65499709999999"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-10-18 16:38:40 +0000"/><title>Prefer alias-declarations over typedefs</title></head><body>
+<div>There are three main reasons why to prefer alias-declarations over typedefs:</div>
+<div><br/></div>
+<div>1. They look clearer and better.</div>
+<div><br/></div>
+<div>2. ^ especially for function pointers:</div>
+<div><br/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">typedef</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">void</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(*pointer) (std::string,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">bool</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">);</span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;"><br/></span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">vs.</span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;"><br/></span></span></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">using</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">pointer =</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">void</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(*) (</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">string</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">bool</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">);</span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;"><br/></span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">(Note how the name is no longer nested as horribly).</span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;"><br/></span></span></div>
+<div>3. Alias declarations can be templated!</div>
+<div><br/></div>
+<div>template&lt;typename T&gt;</div>
+<div>using Map = std::unordered_map&lt;std::string, T&gt;;</div>
+<div><br/></div>
+<div>Previously, you would have had to nest that in a struct:</div>
+<div><br/></div>
+<div>template&lt;typename T&gt;</div>
+<div>struct Map</div>
+<div>{</div>
+<div>     typedef std::unordered_map&lt;std::string, t&gt; type;</div>
+<div>}</div>
+<div><br/></div>
+<div>Meaning you would not only have had to access it using Map&lt;T&gt;<b>::type</b>, but also you would have had to use <i>typename</i> everywhere:</div>
+<div><br/></div>
+<div>typename Map&lt;T&gt;::type map;</div>
+<div><br/></div>
+<div>Because the compiler could not know if there were still a specialization of Map where <i>typ</i>e were not actually a type, but for example a static variable. This is not the case for alias declarations, as alias declarations <i>must</i> alias a type, meaning there is no need for either the ::type nor for the typename:</div>
+<div><br/></div>
+<div>Map&lt;T&gt; map; // using alias-declarations</div>
+<div><br/></div>
+<div>Much better!</div>
+<div><br/></div>
+<div>One last thing to note is that for all the type_traits operations in the &lt;type_traits&gt; header which use a typedef and a struct, there is also a corresponding version using alias declarations. These alias-declaration versions are accessible by appending a ‘_t’ at the end of e.g. std::remove_reference (making it std::remove_reference_t):</div>
+<div><br/></div>
+<div>// C++98</div>
+<div>typename std::remove_const&lt;T&gt;::type object;</div>
+<div><br/></div>
+<div>// C++14</div>
+<div>std::remove_const_t&lt;T&gt; object;</div>
+<div><br/></div>
+</body></html>

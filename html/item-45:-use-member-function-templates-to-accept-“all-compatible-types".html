@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="518"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-03-02 19:29:52 +0000"/><meta name="latitude" content="46.62858276367184"/><meta name="longitude" content="13.82443237304688"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-10-27 23:01:18 +0000"/><title>Item 45: Use member function templates to accept “all compatible types"</title></head><body>
+<div>If you create a template class with pointers (e.g. smart pointer), consider whether you might need to create a <b>generalized copy constructor </b>and/or <b>generalized copy-assignment operator.</b>  </div>
+<div><br/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">template</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">typename</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">T&gt;<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">class</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">SmartPointer<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">public</span><span style="font-style: normal; font-variant: normal; font-weight: normal; line-height: normal;"><span style="font-size: 11px;"><span style="font-family: Menlo;">:<br/>
+   <br/>
+    SmartPointer(T* ptr)<br/>
+    : ptr_(ptr)<br/>
+    { }<br/>
+   </span></span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">   </span></span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// Have to neverthelesss implement the normal</span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">   </span></span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// copy constructor because else the compiler</span></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">   // will generate it (it’s still needed), and it</span></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">   // might generate it in a way you don’t want.</span></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">   // Note that in template</span></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// classes, the argument of the copy constructor</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// can just be the class without the template</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// As here: SmartPointer and not SmartPointer&lt;T&gt;!</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+    SmartPointer(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #4f8187">SmartPointer</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&amp; other)<br/>
+    : ptr_(other.get())<br/>
+    { }<br/>
+   <br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// General copy constructor</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// E.g. to convert the base class pointer</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// in this class to a pointer of a derived</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// type. If types don't fit, the compiler</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// will complain when the pointers are</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// assigned, but without this generalized</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// copy constructor, no assignment would</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// be possible in the first place (not even</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// for base/derived pairs, where it should</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// be allowed)</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">template</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">typename</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">U&gt;<br/>
+    SmartPointer(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #4f8187">SmartPointer</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;U&gt;&amp; other)<br/>
+    : ptr_(other.get())<br/>
+    { }<br/>
+   <br/>
+    ~SmartPointer()<br/>
+    {</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">delete</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">ptr_; }<br/>
+   <br/>
+    T* get()</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+    {</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">return</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">ptr_; }<br/>
+   <br/></span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">private</span><span style="font-style: normal; font-variant: normal; font-weight: normal;"><span style="font-size: 11px;"><span style="font-family: Menlo;">:<br/>
+   <br/>
+    T* ptr_;</span></span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">};</span></span></div>
+</body></html>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="478.5045471191406"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-11-04 17:26:27 +0000"/><meta name="latitude" content="48.25686320457468"/><meta name="longitude" content="11.65509078382207"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-11-04 17:35:50 +0000"/><title>Declare overriding functions override</title></head><body>
+<div>For functions in derived classes to actually override their base-class counterparts, some things have to be taken into account:</div>
+<div><br/></div>
+<ul>
+<li>The base-class method has to be declared “override"</li>
+<li>The function names must be identical (except for destructors)</li>
+<li>The parameter types of the base and derived functions must be <i>identical</i> (not only compatible).</li>
+<li>The const-ness of the base and derived functions must be identical.</li>
+<li>The return types and exception specifications of the base and derived functions must be <i>compatible.</i></li>
+<li>The reference-qualifieres of the base and derived functions must be <i>identical</i>. </li>
+</ul>
+<div><br/></div>
+<div>Thus in this case, there is not a single method in the derived class that overrides its base-class counterpart:</div>
+<div><br/></div>
+<div>class Base</div>
+<div>{</div>
+<div>public:</div>
+<div>     virtual void f1() const;</div>
+<div>     virtual void f2(int x);</div>
+<div>     virtual void f3() &amp;;</div>
+<div>     void f4() const;</div>
+<div>};</div>
+<div><br/></div>
+<div>class Derived : public Base</div>
+<div>{</div>
+<div>public:</div>
+<div>     virtual void f1();</div>
+<div>     virtual void f2(unsigned int x);</div>
+<div>     virtual void f3() &amp;&amp;;</div>
+<div>     void f4() const;</div>
+<div>};</div>
+<div><br/></div>
+<ol>
+<li>wrong const-nesss</li>
+<li>non-identical types</li>
+<li>wrong reference-qualifiers</li>
+<li>not virtual in base class</li>
+</ol>
+<div><br/></div>
+<div>By using override after the functions, all of those errors would have shown!</div>
+<div><br/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">class</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">Base<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">public</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">:<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">virtual</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">void</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">f1()</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">;<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">virtual</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">void</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">f2(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">x);<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">virtual</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">void</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">f3() &amp;;<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">void</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">f4()</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">;<br/>
+};<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">class</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">Derived :</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">public</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #4f8187">Base</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">public</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">:<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">virtual</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">void</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">f1()</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">override</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">; </span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// 'f1' marked 'override' but does not override any member functions</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">virtual</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">void</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">f2(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">unsigned</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">x)</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">override</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">;</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// 'f2' marked 'override' but does not override any member functions</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">virtual</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">void</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">f3() &amp;&amp;</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">override</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">;</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// 'f3' marked 'override' but does not override any member functions</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">void</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">f4()</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">override</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">;</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// Only virtual member functinos can be marked 'override'</span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">};</span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;"><br/></span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">Thus, use override!</span></span></div>
+</body></html>

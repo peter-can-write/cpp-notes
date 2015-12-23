@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="518"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-02-28 17:33:56 +0000"/><meta name="latitude" content="46.62858276367184"/><meta name="longitude" content="13.82443237304688"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-02-28 17:34:05 +0000"/><title>Item 23: Prefer non-member non-friend functions to member functions.</title></head><body>
+<div><span style="font-family: 'Helvetica Neue';">The object-oriented principle of data encapsulation means hiding the data as much as possible. Having too many member functions access member data is not good encapsulation, which is why it is often better to have non-member non-friend functions outside the class handle the available member functions. E.g., if a class has two member functions and a third one that accesses the first two, it is better to make the third non-member non-friend because it doesn’t really need to have access to all the data inside. </span></div>
+<div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">This also has the advantage of being able to split up non-member non-friend functions into multiple files, possibly within the same namespace. </span></div>
+<div><br/></div>
+</div>
+<div><br/></div>
+</body></html>

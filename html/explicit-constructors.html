@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="518"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-02-28 17:21:44 +0000"/><meta name="latitude" content="46.62858276367184"/><meta name="longitude" content="13.82443237304688"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-02-28 17:21:52 +0000"/><title>Explicit constructors</title></head><body>
+<div>
+<div><span style="font-family: 'Helvetica Neue';">Declaring a constructor <b>explicit</b> ensures that there will never be implicit type conversion of an object.</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">This class’ constructor takes an integer:</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">class Foo</span></div>
+<div><span style="font-family: 'Helvetica Neue';">{</span></div>
+<div><span style="font-family: 'Helvetica Neue';">public:</span></div>
+<div><span style="font-family: 'Helvetica Neue';">     explicit Foo(int x);</span></div>
+<div><span style="font-family: 'Helvetica Neue';">};</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">This function takes an object of Foo as its parameter, meaning that</span></div>
+<div><span style="font-family: 'Helvetica Neue';">any value passed to bar will be used to construct foo by calling the</span></div>
+<div><span style="font-family: 'Helvetica Neue';">appropriate constructor. Usually, this means that a Foo object will</span></div>
+<div><span style="font-family: 'Helvetica Neue';">be passed and that foo will be constructed using Foo’s copy constructor:</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">void bar(Foo foo);</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">Foo f;</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">bar(f); // Ok!</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">bar(5); // Not Ok!</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">By declaring Foo’s constructor explicit, we forbid the compiler to initialize foo from</span></div>
+<div><span style="font-family: 'Helvetica Neue';">anything else than a Foo object, since you could also call bar with an integer and the</span></div>
+<div><span style="font-family: 'Helvetica Neue';">compiler would construct foo from the integer.</span></div>
+</div>
+<div><br/></div>
+</body></html>

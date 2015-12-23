@@ -1,0 +1,69 @@
+# braced-vs-parenthesized-initialization
+
+In C++11, there are generally four different ways to initialize a
+variable:
+
+Braced initialization is a new inizialitation syntax added to C++11,
+called “uniform initialization” by many. It has benefits but also
+detriments. Benefits include:
+
+-   Narrowing of types (i.e. if an expression is not guaranteed to be
+    representable with the requested type) is not allowed in
+    braced-initializers:
+
+        struct A { A(double); };
+        struct B { B(float); };
+
+        int x = {1.0 + 2.0}; // Error
+        A a{1.0}; // Error
+        B b{1.0}; // OK, not narrowing of type
+
+-   Avoidance of the _most vexing parse_ if some one accidently
+    types Class object() to default-initialize an object (instead
+    of Class object):
+
+        Class object(); // Declares a function -- Most vexing parse!
+        Class object{}; // OK
+        Class object; // What you actually want
+
+However there is one pretty big detriment about brace-initialization: If
+there is a way to make the braces be an std::initializer_list, it will
+be: ```C++ struct A { A(int, float); // 1
+A(std::initializer_list<bool>); // 2 };
+
+    A a = {1.0, 2.0, 3.0}; // Calls 2, as expected
+    A a{5, 3.14159}; // Calls 2 too! Even though 5 and pi are not even close to being bools!
+
+    A a(5, 3.14159); // Calls 1
+    ```
+
+This can even mess up move or copy construction:
+
+    struct A
+    {
+        A(std::initializer_list<int>); // 1
+        A(const A& other); // 2
+        A(A&& other); // 3
+        
+        operator int() const;
+    };
+
+    A a;
+
+    A b{a}; // Calls 1, because a can convert to int
+    A c{std::move(b)}; // Again, calls 1
+
+So the moral of the story is the following:
+
+-   Use parantheses to call a non-initializer-list constructor, unless
+    braces are necessary (avoid narrowing / most vexing parse)
+-   Use braces for initializer-lists as well as for not specifying the
+    type explicitly (e.g. return {a, b}; for a pair)
+
+One more general thing to note about initialization: Uncopyable objects
+may not be constructed using assignment, even when it would normally
+mean calling a constructor (and not the copy-assignment operator):
+
+std::unique_ptr<int> ptr = new int(5); // Not allowed std::unique_ptr<int> ptr(new int(5)); // Allowed std::unique_ptr<int> ptr{new int(5)}; // Allowed
+
+

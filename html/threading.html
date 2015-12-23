@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="479"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-11-12 22:11:45 +0000"/><meta name="latitude" content="48.2569222539357"/><meta name="longitude" content="11.65499721643136"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-11-13 17:55:59 +0000"/><title>Threading</title></head><body>
+<div>Concurrent programming models:</div>
+<div><br/></div>
+<div>Multiprocessing</div>
+<ul>
+<li>Each process has one thread running</li>
+<li>Communicate via interprocess communication</li>
+<li>- Slow to start, OS has to devote resources to manage the process</li>
+<li>+ Can run on distributed systems</li>
+</ul>
+<div><br/></div>
+<div>Multithreading</div>
+<ul>
+<li>Multiple thread in one process.</li>
+<li>Communicate via shared memory.</li>
+<li>+ Fast to Start</li>
+<li>+ Low OS overhead</li>
+<li>+ Shared memory communication much faster than interprocess communication</li>
+<li>- Difficult to implement</li>
+<li>- Can’t run on distributed system</li>
+</ul>
+<div><br/></div>
+<div>#include &lt;thread&gt;</div>
+<div><br/></div>
+<div>std::thread thread; // nothing running, assign to function later</div>
+<div><br/></div>
+<div>std::thread thread([] () { return 2; }); // starts to run function right away</div>
+<div><br/></div>
+<div>thread.join(); // wait for thread to finish</div>
+<div><br/></div>
+<div>thread.detach(); // thread will run freely, daemon process</div>
+<div><br/></div>
+<div>You can only join or detach a thread once.</div>
+<div><br/></div>
+<div>Most vexing parse also here:</div>
+<div><br/></div>
+<div>std::thread thread(Functor()); // function declaration</div>
+<div><br/></div>
+<div>arguments to the constructor of std::thread are always passed by value! (even if the function takes a reference)</div>
+<div><br/></div>
+<div>Unless you use a reference wrapper: std::ref(argument)</div>
+<div><br/></div>
+<div>And you can still std::move(arguments)</div>
+<div><br/></div>
+<div>Or use pointers.</div>
+<div><br/></div>
+<div>Threads cannot be copied, only moved.</div>
+<div><br/></div>
+<div>All threads have IDs, get them via:</div>
+<div><br/></div>
+<div>std::this_thread::get_id(); // main thread</div>
+<div><br/></div>
+<div>thread.get_id(); // child id (or call this_thread the thread)</div>
+<div><br/></div>
+<div><b>Too many threads: <i>Oversubscription</i></b>. Causes context-switching, slow performance.</div>
+<div><br/></div>
+<div>std::thread::hardware_concurrency(); // how many cores you have, indication of how many threads you should run</div>
+<div><br/></div>
+<div>#include &lt;mutex&gt;</div>
+<div><br/></div>
+<div>std::mutex mutex; // global</div>
+<div><br/></div>
+<div>mutex.lock();</div>
+<div>// shared memory operation</div>
+<div>mutex.unlock();</div>
+<div><br/></div>
+<div>If the operation before unlock() throws, much badness</div>
+<div><br/></div>
+<div>std::lock_guard&lt;std::mutex&gt; guard(mutex); // RAII</div>
+<div><br/></div>
+<div>std::cout is a bad example for use with a lock, because it’s a global variable. More realistic with a file in a class, for example. Always encapsulate the shared object! Else a thread may access it outside (if accessed through a getter).</div>
+<div><br/></div>
+<div>The interface of a class can cause data-races. Consider a stack:</div>
+<div><br/></div>
+<div>class Stack</div>
+<div>{</div>
+<div>public:</div>
+<div>     T&amp; top() const;</div>
+<div>     void pop();</div>
+<div>};</div>
+<div><br/></div>
+<div>And a function f:</div>
+<div><br/></div>
+<div>void f(Stack&amp; stack)</div>
+<div>{</div>
+<div>     auto value = stack.top();</div>
+<div>     stack.pop();</div>
+<div>     process(value);</div>
+<div>}</div>
+<div><br/></div>
+<div>This function is not at all thread-safe! For two threads there will be:</div>
+<div><br/></div>
+<div>left) value = stack.top(); // value1</div>
+<div>right) value = stack.top(); // value1 (same)</div>
+<div>left) stack.pop(); // pops value1</div>
+<div>right) stack.pop(); // pops next value without using!</div>
+<div>left) process(value); // processes value1</div>
+<div>right) process(value); // processes value1</div>
+<div><br/></div>
+<div><br/></div>
+<div>Here the interface is bad for threading because the function is split up into two functions. It is inherently not thread-safe. You should wrap it into two functions (or change the interface, if you can, like here.)</div>
+<div><br/></div>
+<div>Avoid data-race:</div>
+<ul>
+<li>Use mutex to synchronize data access.</li>
+<li>Never leak a handle of data to outside.</li>
+<li>Design interface appropriately.</li>
+</ul>
+<div><br/></div>
+<div>dead-lock:</div>
+<div><br/></div>
+<div>thread 1:</div>
+<div>lock(mutex1); // locks mutex1</div>
+<div>lock(mutex2); // here mutex2 will be locked</div>
+<div><br/></div>
+<div>thread2:</div>
+<div>lock(mutex2); // locks mutex2</div>
+<div>lock(mutex1); // here mutex1 will be locked</div>
+<div><br/></div>
+<div>Correction: Lock mutexes in the same order.</div>
+<div><br/></div>
+<div>Or let C++ help you:</div>
+<div><br/></div>
+<div>std::lock(mutex1, mutex2);</div>
+<div>std::lock_guard&lt;std::mutex&gt;(mutex1, std::adopt_lock);</div>
+<div>std::lock_guard&lt;std::mutex&gt;(mutex2, std::adopt_lock);</div>
+<div><br/></div>
+<div>Considerations:</div>
+<ul>
+<li>Prefer locking a single mutex at a time.</li>
+<li>Try not to lock the mutex and call some user-function (which may do more locking).</li>
+<li>Use std::lock() with std::adopt_lock to lock more than one mutex.</li>
+<li>Lock mutexes in same order</li>
+</ul>
+<div><br/></div>
+<div>Locking granularity:</div>
+<ul>
+<li>Fine-grained lock: protects small amount of data
+<ul>
+<li>Too much becomes tricky</li>
+</ul>
+</li>
+<li>Coarse-grained lock: protects big amounts of data
+<ul>
+<li>Losing opportunities for concurrency</li>
+</ul>
+</li>
+</ul>
+<div><br/></div>
+<div>Use std::unique_lock&lt;std::mutex&gt; to lock() and unlock() multiple times (can’t do that with std::lock_guard):</div>
+<div><br/></div>
+<div>std::unique_lock&lt;std::mutex&gt; locker(mutex);</div>
+<div>// ...</div>
+<div>lock.unlock();</div>
+<div><br/></div>
+<div>locker.lock();</div>
+<div><br/></div>
+<div>// ...</div>
+<div><br/></div>
+<div>You can also defer the initial locking:</div>
+<div><br/></div>
+<div>std::unique_lock&lt;std::mutex&gt; locker(mutex, std::defer_lock);</div>
+<div><br/></div>
+<div>// not locked yet</div>
+<div>locker.lock(); // now locked</div>
+<div><br/></div>
+<div>std::unique_lock is heavier/less efficient than std::lock_guard.</div>
+<div><br/></div>
+<div>Lazy Initialization is what you do when you wait to open a file/call a function/do something until first use. It is thus often called the “initialization-on-first-use-idiom”. for this idiom, this would not be thread safe:</div>
+<div><br/></div>
+<div>void Class::f(path)</div>
+<div>{</div>
+<div>     if (! _file.is_open()) // two threads can run through this while the file is being opened</div>
+<div>     {</div>
+<div>          std::lock_guard&lt;std::mutex&gt;(_mutex);</div>
+<div>          file.open(path);</div>
+<div>     }</div>
+<div><br/></div>
+<div>     // ...</div>
+<div>}</div>
+<div><br/></div>
+<div>So you might come up with this:</div>
+<div><br/></div>
+<div>
+<div>void Class::f(path)</div>
+<div>{</div>
+</div>
+<div>     {</div>
+<div>          std::lock_guard&lt;std::mutex&gt;(mutex2);</div>
+<div>          if (! _file.is_open()) // two threads can run through this while the file is being opened</div>
+<div>          {</div>
+<div>               std::lock_guard&lt;std::mutex&gt;(_mutex);</div>
+<div>               file.open(path);</div>
+<div>          }</div>
+<div>     }</div>
+<div>
+<div><br/></div>
+<div>     // ...</div>
+</div>
+<div>}</div>
+<div><br/></div>
+<div>But now you’re doing all this useless locking/unlocking once the file is opened. The standard provides a solution for this: std::once_flag and std::call_once(). The first is a flag object  which you should keep as a member. The second is a function taking such a flag object (to check/set) and a function to call. It is the correct and thread-safe solution here:</div>
+<div><br/></div>
+<div><br/></div>
+<div>
+<div>void Class::f(path)</div>
+</div>
+<div>{</div>
+<div>     std::call_once(_flag, [] () { _f.open(path); });</div>
+<div>
+<div>
+<div><br/></div>
+<div>     // ...</div>
+</div>
+</div>
+<div>}</div>
+<div><br/></div>
+<div>Don’t use mutex when sleeping (you’re blocking other threads!)</div>
+<div><br/></div>
+<div>Use a std::condition_variable to synchronize execution behavior across threads.</div>
+<div><br/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">condition_variable</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">condition;<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">queue</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&gt; queue;<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">mutex</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">mutex;<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">void</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">produce()<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// unique_lock so that we can lock()/unlock()</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">unique_lock</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">mutex</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&gt; lock(mutex,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">defer_lock</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">);<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">for</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">i =</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">0</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">; i &lt;</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">10</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">; ++i)<br/>
+{<br/>
+lock.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">lock</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">();<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// produce data</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+queue.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">push</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(i);<br/>
+<br/>
+lock.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">unlock</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">();<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">//condition.notify_one(); // notifies one waiting thread</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+condition.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">notify_all</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">();<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">this_thread</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">sleep_for</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">chrono</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">seconds</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">1</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">));<br/>
+<br/>
+}<br/>
+}<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">void</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">consume()<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">unique_lock</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">mutex</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&gt; lock(mutex,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">defer_lock</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">);<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">value;<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">do</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+{<br/>
+lock.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">lock</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">();<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// takes lock object to unlock it if it is asleep</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// as to not block other threads. Also waits</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// until condition.notify_one/all() is called</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// then re-locks the lock. That's why you have</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// to use std::unique_lock (with lock/unlock</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// methods) not std::lock_guard.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+condition.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">wait</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(lock);<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// Can also wake up itself without notification</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// if the predicate given returns true.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// Called 'spurious wake'</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// condition.wait(lock, [] () { return ! queue.empty(); });</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+<br/>
+value = queue.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">front</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">();<br/>
+<br/>
+queue.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">pop</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">();<br/>
+<br/>
+lock.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">unlock</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">();<br/>
+}<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">while</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(value !=</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">9</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">);</span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">}</span></span></div>
+<div><br/></div>
+<div>For return values from one thread, use std::future and std::async. std::async takes a function and its parameters, and returns whatever the function returns, contained in an std::future&lt;ReturnType&gt;. Then, you can use the std::future object’s get() method to retrieve the return value <b>once (more times causes crash).</b> Always capture the return value of std::async (even with std::future&lt;void&gt; if needbe).</div>
+<div><b><br/></b></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// return type for clarity, use auto normally.</span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;"><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">future</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">size_t</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&gt; future =</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">async</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #31595d">fibonacci</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">5</span>);</span></span></div>
+<div><span style="font-style: normal; font-variant: normal; font-weight: normal;"><span style="font-size: 11px;"><span style="font-family: Menlo;"><br/></span></span></span></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">print</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #31595d">ln</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(future.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">get</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">());</span></div>
+<div><br/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// called in this thread</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">auto</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">future_here =</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">async</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">launch</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">deferred</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #31595d">fibonacci</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">5</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">);<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// called in new thread</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">auto</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">future_there =</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">async</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">launch</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">async</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #31595d">fibonacci</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">5</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">);<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// determined by implementation (default value)</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">auto</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">future_anywhere =</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">async</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">launch</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">deferred</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">|</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">launch</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">async</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">,<br/>
+ </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #31595d">fibonacci</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">,</span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">  <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">5</span>);</span></span></div>
+<div><br/></div>
+<div>So use std::launch::async to ensure that a new thread is created. Use std::promise&lt;T&gt; to transmit value to other thread later on.</div>
+<div><br/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// note the reference</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">void</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">wait_for_future(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">future</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&gt;&amp; future)<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">/* ... */</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// waits for value</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">value = future.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">get</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">();<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">print</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #31595d">ln</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(value);<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">/* ... */</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+}<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">main(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">argc,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">char</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">* argv[])<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">promise</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&gt; promise;<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">future</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&gt; future = promise.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">get_future</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">();<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">thread</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #31595d">wait_for_future</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">ref</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(future)).</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">detach</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">();<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">/* ... */</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+<br/>
+promise.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">set_value</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">5</span><span style="font-style: normal; font-variant: normal; font-weight: normal;"><span style="font-size: 11px;"><span style="font-family: Menlo;">);</span></span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">}</span></span></div>
+<div><br/></div>
+<div>For many threads, use std::shared_future&lt;T&gt; (can assign to std::future&lt;T&gt;::share()). You can assign shared_futures, don’t have to move. All threads waiting will stop waiting with shared_future.</div>
+<div><br/></div>
+<div>You can also call std::thread with member functions:</div>
+<div><br/></div>
+<div>std::thread thread(&amp;Class::method, *args);</div>
+<div><br/></div>
+<div>Use std::packaged_task&lt;function&gt; in conjunction with std::bind to create a a callable object which returns a std::future. The object returned by std::bind is also a callable object, but with no sense of threading. So if we call it in another thread, we’ll basically have no way of retrieving its return value. With std::packaged_task, we can block and then retrieve the value with a std::future.</div>
+<div><br/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">queue</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">packaged_task</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">()&gt;&gt; queue;<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">condition_variable</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">pop_condition;<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">mutex</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">mutex;<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">bool</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">flag =</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">false</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">;<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">constexpr</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">inline</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">factorial(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">x)<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">return</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">x ? x *</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #31595d">factorial</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(x -</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">1</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">) :</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">1</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">;<br/>
+}<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">void</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">other_thread()<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">packaged_task</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">()&gt; task;<br/>
+<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">unique_lock</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">mutex</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&gt; lock(mutex);<br/>
+pop_condition.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">wait</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(lock, [] () {</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">return</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">! queue.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">empty</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(); });<br/>
+task =</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">move</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(queue.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">front</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">());<br/>
+queue.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">pop</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">();<br/>
+}<br/>
+<br/>
+task();</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// execute</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+}<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">main(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">argc,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">char</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">* argv[])<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// no parameters for the bound object</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">packaged_task</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">()&gt; task(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">bind</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #31595d">factorial</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">6</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">));<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// So that we can retrieve the value later.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">future</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&gt; future = task.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">get_future</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">();<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// Run in different thread</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">thread</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">thread(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #31595d">other_thread</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">);<br/>
+<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// prevent data-race</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">lock_guard</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">mutex</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&gt; lock(mutex);<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// std::packaged_task is move-only</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+queue.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">push</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">move</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(task));<br/>
+}<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// retrieve value from other thread!</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">print</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #31595d">ln</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(future.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">get</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">());<br/>
+<br/>
+thread.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">join</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">();</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// done</span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">}</span></span></div>
+<div><br/></div>
+<div>3 ways to get a std::future:</div>
+<ul>
+<li>promise::get_future</li>
+<li>packaged_task::get_future</li>
+<li>async() returns a future</li>
+</ul>
+<div><br/></div>
+<div><b>Time constraints:</b></div>
+<div><br/></div>
+<div>Make a thread sleep for:</div>
+<div><br/></div>
+<div>A certain duration:</div>
+<div><br/></div>
+<div>std::this_thread::sleep_for(std::chrono::milliseconds(5));</div>
+<div><br/></div>
+<div>Until a given time-point:</div>
+<div><br/></div>
+<div>std::chrono::steady_clock::time_point piont = std::chrono::stead_clock::now() + std::chrono::seconds(1);</div>
+<div>std::this_thread::sleep_until(point);</div>
+<div><br/></div>
+<div>Make a <b>unique-lock</b> wait:</div>
+<div><br/></div>
+<div>std::unique_lock&lt;std::mutex&gt; lock(mutex);</div>
+<div><br/></div>
+<div>mutex.try_lock(); // throws error if no mutex associated or mutex already locked by this lock</div>
+<div><br/></div>
+<div>mutex.try_lock_for(duration);</div>
+<div><br/></div>
+<div>mutex.try_lock_until(time-point);</div>
+<div><br/></div>
+<div>Make a <b>condition_variable</b> wait:</div>
+<div><br/></div>
+<div>condition.wait_for(unique_mutex, duration);</div>
+<div><br/></div>
+<div>condition.wait_until(unique_mutex, time-point);</div>
+<div><br/></div>
+<div>Make a <b>future</b> wait:</div>
+<div><br/></div>
+<div>future.wait_for(duration);</div>
+<div><br/></div>
+<div>future.wait_until(duration);</div>
+<div><br/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">condition_variable</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">condition;<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">main(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">argc,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">char</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">* argv[])<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">mutex</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">mutex;<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">thread</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">thread([&amp;] () {<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">unique_lock</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">mutex</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&gt; lock(mutex);<br/>
+condition.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">wait_for</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(lock,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">chrono</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">seconds</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">1</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">));<br/>
+});<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// Will only wait 1 second, then just return</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+thread.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">join</span><span style="font-style: normal; font-variant: normal; font-weight: normal; line-height: normal;"><span style="font-size: 11px;"><span style="font-family: Menlo;">();</span></span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">}</span></span></div>
+<div><br/></div>
+<div><b>Semaphore</b></div>
+<div><b><br/></b></div>
+<ul>
+<li>A counter that is manipualted atomically through two operations: signal and wait.</li>
+<li>wait(semaphore): decrement count, if counter is zero then block until signalled()</li>
+<li>signal(semaphore): increment counter, wake up one thread if any waiting</li>
+<li>Each semaphore has an associated queue of processes</li>
+<li>When wait() is called
+<ul>
+<li>If semaphore is available, thread continues</li>
+<li>Else blocks and waits on queue</li>
+</ul>
+</li>
+<li>Signal opens the sempahore()
+<ul>
+<li>If threads are waiting on a queue, one thread is unblocked</li>
+<li>If none are on the queue, the signal is remembered for the next wait() call</li>
+</ul>
+</li>
+</ul>
+<div><br/></div>
+<div>A semaphore whose value can be 0 or 1, is a mutex. A semaphore is really a mutex where more threads are allowed to run than just one (mutex), with an embedded queue for the threads.</div>
+<div><br/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">class</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">Semaphore<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">public</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">:<br/>
+<br/>
+Semaphore(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">size_t</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">count)<br/>
+: _count(count)<br/>
+{ }<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">void</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">wait()<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">unique_lock</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">mutex</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&gt; lock(_mutex);<br/>
+<br/>
+_condition.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">wait</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(lock, [</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">this</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">] () {</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">return</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">_count &gt;</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">0</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">; });<br/>
+<br/>
+--_count;<br/>
+}<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">void</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">signal()<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">lock_guard</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">mutex</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&gt; lock(_mutex);<br/>
+<br/>
+++_count;<br/>
+<br/>
+_condition.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">notify_one</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">();<br/>
+}<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">private</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">:<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">size_t</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">_count;<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">mutex</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">_mutex;<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">condition_variable</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">_condition;<br/>
+};<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #4f8187">Semaphore</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">semaphore(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">2</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">);<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">void</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">try_semaphore(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">x)<br/>
+{<br/>
+semaphore.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #31595d">wait</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">();<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">print</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #31595d">ln</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(x);<br/>
+<br/>
+semaphore.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #31595d">signal</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">();<br/>
+}<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">main(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">argc,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">char</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">* argv[])<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">thread</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">t1(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #31595d">try_semaphore</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">5</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">);<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">thread</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">t2(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #31595d">try_semaphore</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">2</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">);<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">thread</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">t3(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #31595d">try_semaphore</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">10</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">);<br/>
+<br/>
+t1.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">join</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">();<br/>
+t2.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">join</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">();<br/>
+t3.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">join</span><span style="font-style: normal; font-variant: normal; font-weight: normal; line-height: normal;"><span style="font-size: 11px;"><span style="font-family: Menlo;">();</span></span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">}</span></span></div>
+</body></html>

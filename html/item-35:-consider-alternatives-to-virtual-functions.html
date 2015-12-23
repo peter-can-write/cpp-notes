@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="518"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-02-28 17:37:18 +0000"/><meta name="latitude" content="46.62858276367184"/><meta name="longitude" content="13.82443237304688"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-02-28 17:37:30 +0000"/><title>Item 35: Consider alternatives to virtual functions</title></head><body>
+<div>
+<div><span style="font-family: 'Helvetica Neue';">This item mentioned that as an alternative to virtual functions, you could use two different methods if the situation requires it. </span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">1. <b>Non-virtual interface idiom:</b> make a pure virtual function private in the base class, so that the derived class needs to implement it, but cannot use it. provide a default implementation as a virtual function. </span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">class Base</span></div>
+<div><span style="font-family: 'Helvetica Neue';">{</span></div>
+<div><span style="font-family: 'Helvetica Neue';">public:</span></div>
+<div><span style="font-family: 'Helvetica Neue';">     virtual void defaultFoo();</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">private:</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">     virtual void foo() = 0;</span></div>
+<div><span style="font-family: 'Helvetica Neue';">};</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">class Derived : public Base</span></div>
+<div><span style="font-family: 'Helvetica Neue';">{</span></div>
+<div><span style="font-family: 'Helvetica Neue';">public:</span></div>
+<div><span style="font-family: 'Helvetica Neue';">     // needs to implement foo()</span></div>
+<div><span style="font-family: 'Helvetica Neue';">     virtual void foo() override</span></div>
+<div><span style="font-family: 'Helvetica Neue';">     { Base::defaultFoo(); }</span></div>
+<div><span style="font-family: 'Helvetica Neue';">};</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">2. <b>Move function implementation out of class. </b></span></div>
+<div><span style="font-family: 'Helvetica Neue';"><b><br/></b></span></div>
+<div><span style="font-family: 'Helvetica Neue';">class Derived : public Base { Derived(function pointer) : Base (function pointer); void foo() { return function-pointer(); }};</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">+ accessors to access and change implementation at run time. Can also be used with an object hierarchy of algorithms which derive from a base implementation class. This is then called the <b>Strategy Pattern. </b></span></div>
+</div>
+<div><br/></div>
+</body></html>

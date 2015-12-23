@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="518"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-02-28 16:16:18 +0000"/><meta name="latitude" content="46.628582731424"/><meta name="longitude" content="13.82443236808568"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-05-19 18:13:12 +0000"/><title>Typedef</title></head><body>
+<div>
+<div><span style="font-family: 'Helvetica Neue';">Use typedef to create generic types (wrappers) from another type.</span></div>
+</div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">Use standard lengths when possible, such as ::size_type or std::size_t</span></div>
+<div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">typdef int myint; // myint can now be used instead of int</span></div>
+</div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">typedef vector&lt;type&gt;::size_type size_t;</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">size_t size = myvec.size()</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">or in C++11:</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">using size_t = std::vector&lt;type&gt;::size_type;</span></div>
+<div><br/></div>
+</body></html>

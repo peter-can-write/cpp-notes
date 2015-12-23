@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="518"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-02-28 16:15:18 +0000"/><meta name="latitude" content="46.62858032833142"/><meta name="longitude" content="13.82443199837913"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-07-28 07:02:19 +0000"/><title>General things</title></head><body>
+
+	<ul>
+
+		<li>Use always const and &amp; for function parameters, when possible.</li>
+
+	</ul>
+
+	<div>
+
+		<ul>
+
+			<li>Check expressions in bool-returning functions directly in return statement.</li>
+
+		</ul>
+
+		<ul>
+
+			<li>Pass functions as parameters just via: <i>return_type</i> <b>name </b>(<i>args</i>)</li>
+
+		</ul>
+
+		<ul>
+
+			<li>In functions returning <b>void</b>, you can nevertheless do: <b>return;</b> // leaves function</li>
+
+		</ul>
+
+		<ul>
+
+			<li>Declare static, always constant items in <b>functions</b> as static, for example a string which is always searched. It is then only declared once and stored without re-declaring each time</li>
+
+		</ul>
+
+		<ul>
+
+			<li>Use <b>const</b> member functions when possible</li>
+
+		</ul>
+
+		<ul>
+
+			<li>Think recursively, from big problem down to small problem</li>
+
+		</ul>
+
+		<ul>
+
+			<li>Don’t forget to consider whether you could use a reference instead of a pointer</li>
+
+		</ul>
+
+		<ul>
+
+			<li>Use const and &amp; for any parameters except built-in types and std:: iterators and functions</li>
+
+		</ul>
+
+		<ul>
+
+			<li>RAII - Always use objects to manage allocated resources!</li>
+
+		</ul>
+
+	</div>
+
+	<ul>
+
+		<li>Define all functions in implementation files. </li>
+
+		<li>You can use forward declarations for function return types.</li>
+
+		<li>Use <b>std::move</b> to move resources from one unique pointer to the next.</li>
+
+		<li>The order of evaluation of function parameters is undefined.</li>
+
+		<li>Use the <b>copy-and-swap idiom</b> for copy-assignment operators.</li>
+
+		<li>Use std::size_t for any sizes (e.g. loop indices) if a higher range than unsigned int is required</li>
+
+		<li>For class templates, the class name (e.g. Foo) is shorthand for Foo&lt;T&gt; inside the class.</li>
+
+		<li>Use explicit when applicable, mainly for single-argument constructors (no implicit type conversions allowed)</li>
+
+		<li>Use using name = type instead of typedef type name</li>
+
+		<li>Inline is almost redundant, because function definitions in headers are always inlined</li>
+
+		<li>Inline is a demand to the compiler to inline a method, it will still decide what is best</li>
+
+		<li>Specify the input capture lambdas as precisely as possible, don’t always use &amp; automatically</li>
+
+		<li>Don’t forget to still use const if necessary for range-based for loops</li>
+
+		<li>Try to use constexpr when possible and necessary</li><li>Make use of the <b>override </b>and<b> final </b>keywords</li>
+
+	</ul>
+
+	<div><br/></div>
+
+
+
+</body></html>

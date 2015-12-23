@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="518"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-03-14 20:10:59 +0000"/><meta name="latitude" content="46.62858276367184"/><meta name="longitude" content="13.82443237304688"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-07-19 08:42:01 +0000"/><title>Item 47: Define non-member functions inside templates when type conversions are desired</title></head><body>
+<div>When writing a class template that offers functions related to the template that support implicit type conversions on all  parameters, define those functions as friends inside the class template.</div>
+<div><br/></div>
+<div>In Item 24 it gave the advice that if you want to support binary operator overloads for both sides of the equation, e.g. foo * 2 (which would call Foo::operator*(const Foo&amp; foo) if it defined one) as well as 2 * foo (no 2::operator*(const Foo&amp; foo), what to do?), you should define a non-member non-friend function so that implicit conversion can happen on either argument:</div>
+<div><br/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">class</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">Foo<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">public</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">:<br/>
+   <br/>
+    Foo(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">x)<br/>
+    : x_(x)<br/>
+    { }<br/>
+   <br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">x()</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+    {<br/>
+       </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">return</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">x_;<br/>
+    }<br/>
+   <br/></span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">private</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">:<br/>
+   <br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">x_;<br/>
+};<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #4f8187">Foo</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">operator</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">* (</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #4f8187">Foo</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&amp; left,<br/>
+              </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #4f8187">Foo</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&amp; right)<br/>
+{<br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">return</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">left.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #31595d">x</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">() * right.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #31595d">x</span><span style="font-style: normal; font-variant: normal; font-weight: normal;"><span style="font-size: 11px;"><span style="font-family: Menlo;">();</span></span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">}</span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;"><br/></span></span></div>
+<div>Now we can do 2 * foo as well as foo * 2, as well as foo1 * foo2 and foo2 * foo1.</div>
+<div><br/></div>
+<div>But for class template, this won’t work, because template argument deduction does not consider implicit conversions:</div>
+<div><br/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">template</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">typename</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">T&gt;<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">class</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">Foo<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">public</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">:<br/>
+   <br/>
+    Foo(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">T&amp; x)<br/>
+    : x_(x)<br/>
+    { }<br/>
+   <br/>
+    T x()</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+    {<br/>
+       </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">return</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">x_;<br/>
+    }<br/>
+   <br/></span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">private</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">:<br/>
+   <br/>
+    T x_;<br/>
+};<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">template</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">typename</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">T&gt;<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #4f8187">Foo</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;T&gt;</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">operator</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">* (</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #4f8187">Foo</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;T&gt;&amp; left,<br/>
+                 </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #4f8187">Foo</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;T&gt;&amp; right)<br/>
+{<br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">return</span> <span style="font-style: normal; font-variant: normal; font-weight: normal;"><span style="font-size: 11px;"><span style="font-family: Menlo;">left.x() * right.x();</span></span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">}</span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;"><br/></span></span></div>
+<div>If we declare an object Foo&lt;int&gt; foo(2) now and try to do what we did before, so either 5 * foo or foo * 5, this will fail, because for the template function, one of the arguments can be deduced to Foo&lt;int&gt;, but the other is just int, which doesn’t fit. The problem is that the int doesn’t implicitly convert to Foo&lt;int&gt;. The solution is to declare this non-member non-friend function as a friend inside the template class Foo:</div>
+<div><br/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// Foo is shorthand for Foo&lt;T&gt;</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">inside the class itself</span></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">friend</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">Foo</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">operator</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">* (</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">Foo&amp; left,<br/>
+                         </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">Foo&amp; right)<br/>
+    {<br/>
+       </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">return</span> <span style="font-style: normal; font-variant: normal; font-weight: normal;"><span style="font-size: 11px;"><span style="font-family: Menlo;">left.x() * right.x();</span></span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">    }</span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;"><br/></span></span></div>
+<div>The only way to declare a non-member function inside a class is to make it a friend. It doesn’t actually have to make us of its ability to access internals of the class as a friend. It’s just the only way to make it non-member. Now, whenever a class of Foo is instantiated, such as Foo&lt;int&gt;, the compiler will also instantiate a copy of this method for Foo&lt;int&gt;. This is then no longer a function template, but a normal, declared function. Therefore, implicit conversions work again and we can call 2 * foo or foo * 2!</div>
+<div><br/></div>
+<div>Also: all methods of a class that are defined inside the class are implicitly declared inline.</div>
+</body></html>

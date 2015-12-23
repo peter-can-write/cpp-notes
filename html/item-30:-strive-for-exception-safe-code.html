@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="518"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-02-28 17:34:55 +0000"/><meta name="latitude" content="46.62858276367184"/><meta name="longitude" content="13.82443237304688"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-02-28 17:35:14 +0000"/><title>Item 30: Strive for exception-safe code.</title></head><body>
+<div>
+<div>
+<div><span style="font-family: 'Helvetica Neue';">Exception-safe functions leak no resources and allow no data structures to become corrupted, even when exceptions are thrown. Such functions offer the basic, strong or nowthrow guarantee:</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+</div>
+<ul>
+<li><span style="font-family: 'Helvetica Neue';"><b>The basic guarantee</b> promises that if an exception is thrown, everything in the program remains in a valid state. No objects or data structures become corrupted. </span></li>
+</ul>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<ul>
+<li><span style="font-family: 'Helvetica Neue';"><b>The strong guarantee</b> promises that if an exception is thrown, the state of the program is unchanged (atomic function). If they succeed, they succeed completely and if they fail, they fail completely. This can often be achieved through copy-and-swap, meaning you copy the item to be changed to a temporary object, change things in the copy and then swap the copy’s data back to the original. That way, if an exception is thrown, the original object remains unchanged. However, this can be inefficient due to copying. </span></li>
+</ul>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div>
+<ul>
+<li><span style="font-family: 'Helvetica Neue';"><b>The nothrow guarantee</b> promises never to throw an exception. </span></li>
+</ul>
+</div>
+</div>
+<div><br/></div>
+</body></html>

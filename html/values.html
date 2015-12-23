@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="531"/><meta name="created" content="2015-07-22 05:52:46 +0000"/><meta name="latitude" content="46.62786056291929"/><meta name="longitude" content="13.82522634231842"/><meta name="source" content="mobile.iphone"/><meta name="updated" content="2015-08-12 10:07:46 +0000"/><title>Values</title></head><body>An expression can fall into one of three categories:
+<div>
+<ul>
+<li>lvalue (identity, not movable)</li>
+<li>xvalue (identity, movable)</li>
+<li>prvalue (no identity, movable)</li>
+</ul>
+<div>Which are further generalized into two categories:</div>
+<div>
+<ul>
+<li>glvalue (identity)</li>
+<li>rvalue(movable)</li>
+</ul>
+<div>Which are all:</div>
+</div>
+<div>
+<ul>
+<li>Expressions</li>
+</ul>
+<div>-&gt; the stroustrup W</div>
+</div>
+<div><br/></div>
+<div><b>lvalue</b>: non-movable objects with identity.</div>
+<div><br/></div>
+<div>Properties:</div>
+<div>
+<ul>
+<li>Has identity and name (can be referred to) </li>
+<li>Address can be taken</li>
+<li>Can have incomplete type</li>
+<li>Can be polymorphic (its dynamic type must not be the same as its static type)</li>
+<li>Non-temporary</li>
+<li><i>Can</i> be on the left side of a built-in assignment. Not always (arrays, string literals or const-qualified objects cannot)</li>
+</ul>
+<div>Examples:</div>
+</div>
+<div>
+<ul>
+<li>Variables with names</li>
+<li>The result of member access into an lvalue</li>
+<li>The result of derefering an lvalue pointer, including via the subscript notation a[i]</li>
+<li>String literals</li>
+<li>Functions returning lvalue references</li>
+<li>Explicit lvalue casts</li>
+</ul>
+<div>There is implicit lvalue to rvalue conversion, e.g. When returning by value from a function or when using arithmetic operators for lvalues (x + y) they are converted to rvalues. </div>
+</div>
+<div><br/></div>
+<div><b>prvalue</b>: movable objects without identity.</div>
+<div><br/></div>
+<div>Properties: </div>
+<div>
+<ul>
+<li>Is non-polymorphic</li>
+<li><br/></li>
+</ul>
+</div>
+<div><br/></div>
+<div><br/></div>
+</div>
+<hr/>
+Conflicting modification on 22 Jul 2015 09:07:40:
+<hr/>
+An expression can fall into one of three categories:
+<div>
+<ul>
+<li>lvalue (identity, not movable)</li>
+<li>xvalue (identity, movable)</li>
+<li>prvalue (no identity, movable)</li>
+</ul>
+<div>Which are further generalized into two categories:</div>
+<div>
+<ul>
+<li>glvalue (identity)</li>
+<li>rvalue(movable)</li>
+</ul>
+<div>Which are all:</div>
+</div>
+<div>
+<ul>
+<li>Expressions</li>
+</ul>
+<div>-&gt; the stroustrup W</div>
+</div>
+<div><br/></div>
+<div><b>lvalue</b>: non-movable objects with identity.</div>
+<div><br/></div>
+<div>Properties:</div>
+</div>
+<ul>
+<li>Has identity and name (can be referred to) </li>
+<li>Address can be taken</li>
+<li>Can have incomplete type</li>
+<li>Can be polymorphic (its dynamic type must not be the same as its </li>
+<li>Non-temporary</li>
+<li><i>Can</i> be on the left side of a built-in assignment. Not always (arrays, string literals or const-qualified objects cannot)</li>
+</ul>
+<div><br/></div>
+<div>
+<div>Examples:</div>
+</div>
+<ul>
+<li>Variables with names</li>
+<li>The result of member access into an lvalue</li>
+<li>The result of derefering an lvalue pointer, including via the subscript notation a[i]</li>
+<li>String literals</li>
+<li>Functions returning lvalue references</li>
+<li>Explicit lvalue casts</li>
+<li>Always binds to an lvalue reference overload of a function</li>
+</ul>
+<div><br/></div>
+<div>
+<div>There is implicit lvalue to rvalue conversion, e.g. When returning by value from a function or when using arithmetic operators for lvalues (x + y) they are converted to rvalues. </div>
+</div>
+<div>
+<div><br/></div>
+<div><b>prvalue</b>: movable objects without identity.</div>
+<div><br/></div>
+</div>
+<div>Properties: </div>
+<ul>
+<li>Is non-polymorphic (dynamic type = static type)</li>
+<li>Cannot have incomplete type</li>
+<li>No identity</li>
+<li>Address cannot be taken</li>
+<li>Always binds to an rvalue reference overload of a function</li>
+</ul>
+<div><br/></div>
+<div>Examples:</div>
+<ul>
+<li>Numerical literals and generally all non-string literals (nullptr, 43, true)</li>
+<li>The result of built-in arithmetic, comparison, shift, logical or bitwise operators</li>
+<li>The result of a function call that returns by value</li>
+<li>The result of taking the address of an object</li>
+<li>The result of the built-in postincrement and postdecrement operators</li>
+<li>The result of a cast to object type (i.e. the return value of a cast)</li>
+<li>The result of sizeof</li>
+<li>Lambda expressions</li>
+</ul>
+<div><br/></div>
+<div><b>xvalue</b>: an expression that identifies an eXpiring object with or without identity, that can be moved from.</div>
+<div><br/></div>
+<div>Properties:</div>
+<ul>
+<li>Same as glvalues and rvalues</li>
+</ul>
+<div><br/></div>
+<div>Examples:</div>
+<ul>
+<li>The result of a function that returns an rvalue reference</li>
+<li>The result of calls to std::move or std::forward (if the argument passed to std::forward was an rvalue), i.e. generally any explicit cast to an rvalue reverence.</li>
+</ul>
+<div>
+<div><br/></div>
+<div><br/></div>
+</div>
+<hr/>
+Conflicting modification on 22 Jul 2015 09:45:34:
+<hr/>
+An expression can fall into one of three categories:
+<div>
+<ul>
+<li>lvalue (identity, not movable)</li>
+<li>xvalue (identity, movable)</li>
+<li>prvalue (no identity, movable)</li>
+</ul>
+<div>Which are further generalized into two categories:</div>
+<div>
+<ul>
+<li>glvalue (identity)</li>
+<li>rvalue(movable)</li>
+</ul>
+<div>Which are all:</div>
+</div>
+<div>
+<ul>
+<li>Expressions</li>
+</ul>
+<div>-&gt; the stroustrup W</div>
+</div>
+<div><br/></div>
+<div><b>lvalue</b>: non-movable objects with identity.</div>
+<div><br/></div>
+<div>Properties:</div>
+</div>
+<ul>
+<li>Has identity and name (can be referred to) </li>
+<li>Address can be taken</li>
+<li>Can have incomplete type</li>
+<li>Can be polymorphic (its dynamic type must not be the same as its static type)</li>
+<li>Non-temporary</li>
+<li><i>Can</i> be on the left side of a built-in assignment. Not always (arrays, string literals or const-qualified objects cannot)</li>
+</ul>
+<div><br/></div>
+<div>
+<div>Examples:</div>
+</div>
+<ul>
+<li>Variables with names</li>
+<li>The result of member access into an lvalue</li>
+<li>The result of derefering an lvalue pointer, including via the subscript notation a[i]</li>
+<li>String literals</li>
+<li>Functions returning lvalue references</li>
+<li>Explicit lvalue casts</li>
+<li>Always binds to an lvalue reference overload of a function</li>
+</ul>
+<div><br/></div>
+<div>
+<div>There is implicit lvalue to rvalue conversion, e.g. When returning by value from a function or when using arithmetic operators for lvalues (x + y) they are converted to rvalues. </div>
+</div>
+<div>
+<div><br/></div>
+<div><b>prvalue</b>: movable objects without identity.</div>
+<div><br/></div>
+</div>
+<div>Properties: </div>
+<ul>
+<li>Is non-polymorphic (dynamic type = static type)</li>
+<li>Cannot have incomplete type</li>
+<li>No identity</li>
+<li>Address cannot be taken</li>
+<li>Always binds to an rvalue reference overload of a function</li>
+</ul>
+<div><br/></div>
+<div>Examples:</div>
+<ul>
+<li>Numerical literals and generally all non-string literals (nullptr, 43, true)</li>
+<li>The result of built-in arithmetic, comparison, shift, logical or bitwise operators</li>
+<li>The result of a function call that returns by value</li>
+<li>The result of taking the address of an object</li>
+<li>The result of the built-in postincrement and postdecrement operators</li>
+<li>The result of a cast to object type (i.e. the return value of a cast)</li>
+<li>The result of sizeof</li>
+<li>Lambda expressions</li>
+</ul>
+<div><br/></div>
+<div><b>xvalue</b>: an expression that identifies an eXpiring object with or without identity, that can be moved from.</div>
+<div><br/></div>
+<div>Properties:</div>
+<ul>
+<li>Same as glvalues and rvalues</li>
+</ul>
+<div><br/></div>
+<div>Examples:</div>
+<ul>
+<li>The result of a function that returns an rvalue reference</li>
+<li>The result of calls to std::move or std::forward (if the argument passed to std::forward was an rvalue), i.e. generally any explicit cast to an rvalue reverence.</li>
+</ul>
+<div>
+<div><br/></div>
+<div><br/></div>
+</div>
+</body></html>

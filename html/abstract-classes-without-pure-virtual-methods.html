@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="518"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-02-28 17:24:34 +0000"/><meta name="latitude" content="46.62858276367184"/><meta name="longitude" content="13.82443237304688"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-10-31 19:17:00 +0000"/><title>Abstract classes without pure virtual methods</title></head><body>
+
+	<div>
+
+		<div><span style="font-family: 'Helvetica Neue';">If you want a class without pure virtual functions to be solely an abstract class, make the destructor pure virtual:</span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">class Base</span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">{</span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">public:</span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">     void do(){ }</span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">     virtual ~Base() = 0;</span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">};</span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+
+		<div><span style="font-family: 'Helvetica Neue';">I.e.: you want a base class for inheritance/polymorphism but don't want the base class to be instantiateable. </span></div><div><span style="font-family: 'Helvetica Neue';"><br/></span></div><div><span style="font-family: 'Helvetica Neue';">That way, giving it a pure virtual function makes it an abstract class. However, you must implement that destructor somewhere, as the compiler will call it when a derived class’ destructor is called. </span></div>
+
+	</div>
+
+	<div><br/></div>
+
+
+
+</body></html>

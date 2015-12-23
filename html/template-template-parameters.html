@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="519.0711669921875"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-08-06 11:43:32 +0000"/><meta name="latitude" content="46.62869607784789"/><meta name="longitude" content="13.82429020864783"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-08-06 12:05:37 +0000"/><title>Template template parameters</title></head><body>
+<div>If you want to have template parameters that are itself template classes, but want to be able to specify the template parameters of the template class yourself, you can mark the template class a "template template parameter” using “template&lt;typename&gt; class The_Class”.</div>
+<div><br/></div>
+<div>Case 1) You just want a template class but don’t want to be able to specify the template parameters of the class yourself:</div>
+<div><br/></div>
+<div>template&lt;typename Container&gt;</div>
+<div>void foo(const Container&amp; container)</div>
+<div>{</div>
+<div>     std::cout &lt;&lt; container.size() &lt;&lt; std::endl;</div>
+<div>}</div>
+<div><br/></div>
+<div>Case 2) You want to specify the template parameters of the template parameter yourself. For this, you must have template parameters for the template parameters of the template template parameter and also declare the template template parameter as a template parameter. </div>
+<div><br/></div>
+<div>template&lt;typename T, class Alloc, template&lt;typename,class&gt; class Container&gt;</div>
+<div>void foo(const Container&lt;T, Alloc&gt;&amp; container)</div>
+<div>{</div>
+<div>     std::cout &lt;&lt; container.size() &lt;&lt; std::endl;</div>
+<div>}</div>
+<div><br/></div>
+<div>Case 3) VariadicsL</div>
+<div><br/></div>
+<div>template&lt;typename… Args, template&lt;typename…&gt; class Container&gt;</div>
+<div>void foo(const Container&lt;Args…&gt;&amp; container)</div>
+<div>{</div>
+<div>     std::cout &lt;&lt; container.size() &lt;&lt; std::endl;</div>
+<div>}</div>
+</body></html>

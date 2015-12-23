@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="519.0004272460938"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-08-03 16:32:04 +0000"/><meta name="latitude" content="46.62886213576206"/><meta name="longitude" content="13.82463652657378"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-08-03 16:40:34 +0000"/><title>Re-allocation for string and vector</title></head><body>
+<div>When you request to push back an element in a string or vector where size() == capacity() or when you wish to resize() the container to a size greater than the capacity(), a re-allocation will take place. This involves the following four steps:</div>
+<div><br/></div>
+<ul>
+<li>Allocation of new memory block. The number of elements that can be stored in this new memory will be some integer multiple of the number that could be stored in the previous block (mostly a factor 2).</li>
+<li>Copying of old objects to new memory (move in C++11, if move constructor is no-except).</li>
+<li>Destroy all objects in old memory (Call their destructor).</li>
+<li>De-allocate old memory</li>
+</ul>
+<div><br/></div>
+<div>As can be seen, this is a very expensive process, which is why you should use reserve() or even resize() when you can. Moreover, re-allocation invalidates all iterators, pointers and references into the old memory.</div>
+<div><br/></div>
+<div>Even if you are unsure about <i>exactly </i>how many objects you will want to store, you can use reserve() with the maximum you think you’ll need and then shrink_to_fit() afterwards.</div>
+</body></html>

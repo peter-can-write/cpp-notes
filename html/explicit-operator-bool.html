@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="476.4927062988281"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-12-10 12:27:31 +0000"/><meta name="latitude" content="48.26249714916038"/><meta name="longitude" content="11.66839100727679"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-12-10 17:05:19 +0000"/><title>explicit operator bool</title></head><body>
+<div>C++11 adds explicit operator bool(), which is like the old operator bool(), but differs in that it only converts under certain circumstances — contextual conversion. First, consider the old/plain operator bool():</div>
+<div><br/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">class</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">BoolTest<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">public</span><span style="font-style: normal; font-variant: normal; font-weight: normal;"><span style="font-size: 11px;"><span style="font-family: Menlo;">:</span></span></span></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">operator</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">bool</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">() {</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">return</span> <span style="font-family: Menlo;"><span style="font-size: 11px;"><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">true</span><span style="font-style: normal; font-variant: normal; font-weight: normal;">; }</span></span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">};</span></span></div>
+<div><br/></div>
+<div>An object of type BoolTest will convert to a boolean in if-clauses (wanted), but also for arithmetic operations (bad):</div>
+<div><br/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">BoolTest b;<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">if</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(b) print::ln(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #43d34b">"!"</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">);<br/>
+<br/></span></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">1</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">+ b;</span></div>
+<div><br/></div>
+<div>Now, take explicit operator bool:</div>
+<div><br/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">class</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">BoolTest<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">public</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">:<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">explicit</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">operator</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">bool</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">() {</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">return</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">true</span><span style="font-style: normal; font-variant: normal; font-weight: normal;"><span style="font-size: 11px;"><span style="font-family: Menlo;">; }</span></span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">};</span></span></div>
+<div><br/></div>
+<div>By adding explicit, we enable contextual conversion, i.e. it will convert only when really expecting a boolean, but not for arithmetic operations:</div>
+<div><br/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #4f8187">BoolTest</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">b;<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">if</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(b)</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">print</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #31595d">ln</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #43d34b">"!"</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">);<br/>
+<br/></span></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">1</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">+ b;</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// Invalid operands to binary expression 'int' and 'BoolTest'</span></div>
+<div><br/></div>
+<div>These “special circumstances” are:</div>
+<div><br/></div>
+<div>
+<ul style="padding: 0px 2.5em; list-style: disc; color: rgb(51, 51, 51); font-family: Arial, Tahoma, Helvetica, FreeSans, sans-serif; font-size: 13px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-stroke-width: 0px;">
+<li style="padding: 0.25em 0px; text-indent: 0px; color: rgb(51, 51, 51); border: none;">Negation: <code>!t</code> (5.3.1 p9).</li>
+<li style="padding: 0.25em 0px; text-indent: 0px; color: rgb(51, 51, 51); border: none;">Logical AND: <code>t&amp;&amp;s</code> (5.14).</li>
+<li style="padding: 0.25em 0px; text-indent: 0px; color: rgb(51, 51, 51); border: none;">Logical OR: <code>t||s</code> (5.15).</li>
+<li style="padding: 0.25em 0px; text-indent: 0px; color: rgb(51, 51, 51); border: none;">Conditional operator: <code>t?"yup":"nope"</code> (5.16 p1).</li>
+<li style="padding: 0.25em 0px; text-indent: 0px; color: rgb(51, 51, 51); border: none;">Selection statement (other than <code>switch</code>): <code>if (t)</code> or <code>if (Testable t{})</code> (6.4 p4).</li>
+<li style="padding: 0.25em 0px; text-indent: 0px; color: rgb(51, 51, 51); border: none;"><code>for</code> statement, <code>for(;t;) //...</code>, and</li>
+<li style="padding: 0.25em 0px; text-indent: 0px; color: rgb(51, 51, 51); border: none;"><code>while</code> statement, <code>while(t) //...</code>. The wording isn't used directly for these, and they are actually defined in section 6.5, but 6.4 p2 says "The rules for conditions apply both to <i>selection-statements</i> and to the <code>for</code> and <code>while</code> statements (6.5)."</li>
+<li style="padding: 0.25em 0px; text-indent: 0px; color: rgb(51, 51, 51); border: none;"><code>do</code> statement: <code>do {//...} while (t);</code> (6.5.2 p1).</li>
+<li style="padding: 0.25em 0px; text-indent: 0px; color: rgb(51, 51, 51); border: none;">static-assert_declaration: <code>static_assert(t);</code> (note you will need <code>constexpr</code> here) (7 p4).</li>
+<li style="padding: 0.25em 0px; text-indent: 0px; color: rgb(51, 51, 51); border: none;">Exception specification: <code>SomeType foo() noexcept(t);</code> (note you will need <code>constexpr</code> here) (15.4 p1).</li>
+<li style="padding: 0.25em 0px; text-indent: 0px; color: rgb(51, 51, 51); border: none;">NullablePointer concept: Any type <code>P</code> that can be used where the standard library requires a type fulfilling the NullablePointer concept, it is required that an instance of <code>P</code> can be contextually converted to <code>bool</code> (17.6.3.3 p3).</li>
+<li style="padding: 0.25em 0px; text-indent: 0px; color: rgb(51, 51, 51); border: none;">Any algorithm in the <code>&lt;algorithm&gt;</code> header that takes a template parameter named <code>Predicate</code>, then for an instance <code>pred</code> of that type, it must support <code>pred(*first)</code> being contextually converted to type <code>bool</code>. (25.1 p8) <br/>
+Similarly, for a <code>BinaryPredicate binary_pred</code>, it is required that <code>binary_pred(*first1, *first2)</code> or <code>binary_pred(*first1, value)</code> can be contextually converted to type <code>bool</code>. (25.1 p9)</li>
+<li style="padding: 0.25em 0px; text-indent: 0px; color: rgb(51, 51, 51); border: none;">For any algorithm taking a comparator type <code>Compare</code>, for an instance <code>Compare comp</code>, the return value when contextually converted to type <code>bool</code> must convert to <code>true</code> if the first argument is less than the second, and <code>false</code> otherwise. (25.4 p2)</li>
+</ul>
+</div>
+</body></html>

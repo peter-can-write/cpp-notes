@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="478.5412292480469"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-11-11 00:13:03 +0000"/><meta name="latitude" content="48.25686591903857"/><meta name="longitude" content="11.65508391315684"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-11-11 00:49:18 +0000"/><title>Avoid default lambda captures</title></head><body>
+<div>Lambdas can captures in five different ways:</div>
+<div><br/></div>
+<ul>
+<li>Not at all (captures no variables, can not use anything from enclosing scope): []</li>
+<li>Default by reference (captures all variables by reference): [&amp;] </li>
+<li>Default by value (captures all variables by value): [=]</li>
+<li>Explicit by reference (captures the specified variable <i>x</i> by reference): [&amp;x]</li>
+<li>Explicit by value (captures the specified variable <i>x</i> by value): [x]</li>
+</ul>
+<div><br/></div>
+<div>Item 31 in Effective Modern C++ suggests to avoid default captures, i.e. [=] and [&amp;], because they can lead to a variety of problems.</div>
+<div><br/></div>
+<div><b>1. Dangling references</b></div>
+<div><b><br/></b></div>
+<div>If you capture by reference by default, you run the risk of capturing local variables by reference. This is really nasty if you return the lambda, as, on return, the value you captures and hold a reference to will be destroyed, and your reference in the lambda will dangle (undefined behavior):</div>
+<div><br/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">function</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">()&gt; make_adder(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">x,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">y)<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">return</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">[&amp;] () {</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">return</span> <span style="font-style: normal; font-variant: normal; font-weight: normal;"><span style="font-size: 11px;"><span style="font-family: Menlo;">x + y; };</span></span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">}</span></span></div>
+<div><br/></div>
+<div>For example here, this lambda takes <i>x</i> and <i>y</i> by reference. However, as these parameters were themselves taken by value, the references to the captured variables would dangle. Bad!</div>
+<div><br/></div>
+<div><b>2. Unexpected capturing</b></div>
+<div><b><br/></b></div>
+<div>First, it is important to know that <b>lambda captures capture only local, non-static variables</b>, i.e. not static variables declared in a function, class or file, nor global variables defined in a namespace or outside one (really globally). Now, see this code:</div>
+<div><br/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">class</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">FunctionMaker<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">public</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">:<br/>
+<br/>
+FunctionMaker(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">x)<br/>
+: _x(x)<br/>
+{ }<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">function</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">()&gt; make_adder(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">y)<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">return</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">[&amp;] () {</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">return</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">_x + y; };<br/>
+}<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">private</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">:<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font-style: normal; font-variant: normal; font-weight: normal; line-height: normal;"><span style="font-size: 11px;"><span style="font-family: Menlo;">_x;</span></span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">};</span></span></div>
+<div><br/></div>
+<div>Here, you would say “of course, the capture has to be by value, because else the reference to the parameter will definitely dangle, and the reference to the member variable as soon as the object is destroyed, thus the solution is to make the default-capture by value:”</div>
+<div><br/></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">...</span></span></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">function</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">()&gt; make_adder(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font-family: Menlo;"><span style="font-size: 11px;">y)</span></span></div>
+<div><span style="font-style: normal; font-variant: normal; font-weight: normal;"><span style="font-size: 11px;"><span style="font-family: Menlo;">{</span></span></span></div>
+<div><span style="font-family: Menlo;"><span style="font-size: 11px;"><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">     return</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">[=] () {</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">return</span> <span style="font-style: normal; font-variant: normal; font-weight: normal; line-height: normal;">_x + y; };</span></span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">}</span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">...</span></span></div>
+<div><br/></div>
+<div>Wrong! This would copy the parameter y, yes. But remember that lambda captures only capture local, non-static variables. So does this code not compile, then? No, it does. What is captured? <i>this</i>. The pointer to the current object (because _x is replaced with this-&gt;_x during compilation). So this is still horrible, because if the object is destroyed, the <i>this</i>-pointer will dangle. You could have seen this problem (or not made it compile) by not using default captures:</div>
+<div><br/></div>
+<div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">...</span></span></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">function</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">()&gt; make_adder(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font-family: Menlo;"><span style="font-size: 11px;">y)</span></span></div>
+</div>
+<div><span style="font-style: normal; font-variant: normal; font-weight: normal;"><span style="font-size: 11px;"><span style="font-family: Menlo;">{</span></span></span></div>
+<div><span style="font-family: Menlo;"><span style="font-size: 11px;"><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">     return</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">[_x] () {</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">return</span> <span style="font-style: normal; font-variant: normal; font-weight: normal;">_x + y; }; // error! no local _x to capture!</span></span></span></div>
+<div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">}</span></span></div>
+</div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">...</span></span></div>
+<div><br/></div>
+<div>Another case where unexpected capturing will happen is with static variables. You may think that taking them by value will copy the variables, but remember that <b>lambda captures only capture <i>non-static</i>, local variables</b>. Thus, static variables will not be copied and if you change them later, the values you thought you copied in the capture will reflect those changes (which you probably didn’t want):</div>
+<div><br/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">function</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">()&gt; get_function_returning_current_static_value()<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">static</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">x =</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">0</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">;<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// doesn't capture anything!</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">auto</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">lambda = [=] () {</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">return</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">x; };<br/>
+<br/>
+++x;</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// changes x in lambda</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">return</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">lambda;<br/>
+}<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">main(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">argc,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">char</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">* argv[])<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">auto</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">f =</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #31595d">get_function_returning_current_static_value</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">();<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">print</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #31595d">ln</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(f());</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// prints 1, not 0!!!</span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">}</span></span></div>
+<div><br/></div>
+<div>Again, had you not default-captured, this problem would have been become apparent:</div>
+<div><br/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// 'x' cannot be captured because it does not have automatic storage duration</span></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">auto</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">lambda = [x] () {</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">return</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">x; };</span></div>
+</body></html>

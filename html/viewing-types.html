@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="keywords" content="C++, template, types"/><meta name="created" content="2015-10-17 16:40:17 +0000"/><meta name="updated" content="2015-10-17 16:50:03 +0000"/><title>Viewing types</title></head><body>
+<!-- Sublime:LS0tCnRpdGxlOiBWaWV3aW5nIHR5cGVzCm5vdGVib29rOiBDKysKdGFnczpDKyssIHRlbXBsYXRlLCB0eXBlcwotLS0KCkhvdyBkbyB5b3UgdmlldyB0eXBlcyAoYXV0b21hdGljYWxseSBkZWR1Y2VkKSBhdCBydW50aW1lPyBFYXN5IGd1ZXNzIGlzIGB0eXBlaWRgLCBidXQgaXQgaGFzIG9uZSBjYXZlYXQuIEl0cyBzcGVjaWZpY2F0aW9uIG1hbmRhdGVzIHRoYXQgaXQgaW50ZXJwcmV0cyB0aGUgdHlwZSBhcyBpZiBpdCBoYWQgYmVlbiBwYXNzZWQgdG8gdGVtcGxhdGUgZnVuY3Rpb24gdGFraW5nIGl0cyBhcmd1bWVudCBieSB2YWx1ZSwgbWVhbmluZyBpdCByZW1vdmVzIHJlZmVyZW5jZXMgYW5kIGN2LXF1YWxpZmljYXRpb25zOgoKYGBgQysrCnRlbXBsYXRlPHR5cGVuYW1lIFQ+CnZvaWQgZihjb25zdCBUJiB2YWx1ZSkKewoJc3RkOjpjb3V0IDw8IHR5cGVpZCh2YWx1ZSkubmFtZSgpIDw8IHN0ZDo6ZW5kbDsKfQoKaW50IHggPSA1OwoKLy8gUHJpbnRzIGludCAoaSkgcmF0aGVyIHRoYW4gY29uc3QgaW50JiAoS2lSKQpmKHgpOwpgYGAKClRoZSBzb2x1dGlvbiBpcyB0byB1c2UgdGhlIGJvb3N0Ojp0eXBlaW5kZXggbGlicmFyeToKCmBgYEMrKwojaW5jbHVkZSA8Ym9vc3QvdHlwZV9pbmRleC5ocHA+Cgp0ZW1wbGF0ZTx0eXBlbmFtZSBUPgp2b2lkIGYoY29uc3QgVCYgdmFsdWUpCnsKCXVzaW5nIGJvb3N0Ojp0eXBlaW5kZXg6OnR5cGVfaWRfd2l0aF9jdnI7CgkKCWF1dG8gcmVwcmVzZW50YXRpb24gPSB0eXBlX2lkX3dpdGhfY3ZyPGRlY2x0eXBlKHZhbHVlKT4oKTsKCQoJc3RkOjpjb3V0IDw8IHJlcHJlc2VudGF0aW9uLnByZXR0eV9uYW1lKCkgPDwgc3RkOjplbmRsOwp9CgppbnQgeCA9IDU7CgovLyBQcmludHMgaW50IGNvbnN0JgpmKHgpOwpgYGAKCgo=-->
+<p>How do you view types (automatically deduced) at runtime? Easy guess is <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">typeid</code>, but it has one caveat. Its specification mandates that it interprets the type as if it had been passed to template function taking its argument by value, meaning it removes references and cv-qualifications:</p>
+
+<pre title="C++" style="color: #000000; font-family: monospace,monospace; font-size: 0.9em; white-space: pre-wrap; word-wrap: break-word; border: 1px solid #cccccc; border-radius: 3px; overflow: auto; padding: 6px 10px; margin-bottom: 10px;background-color:#ffffff;"><code style="color: black; font-family: monospace,monospace; font-size: 0.9em;"><span style="color: #AA0D92">template</span><span style="color: #000000">&lt;</span><span style="color: #AA0D92">typename</span> <span style="color: #000000">T&gt;</span>
+<span style="color: #AA0D92">void</span> <span style="color: #000000">f</span>(<span style="color: #AA0D92">const</span> <span style="color: #000000">T&amp;</span> <span style="color: #000000">value</span>)
+{
+    <span style="color: #000000">std::cout</span> <span style="color: #000000">&lt;&lt;</span> <span style="color: #AA0D92">typeid</span>(<span style="color: #000000">value</span>).<span style="color: #000000">name</span>() <span style="color: #000000">&lt;&lt;</span> <span style="color: #000000">std::endl</span>;
+}
+
+<span style="color: #AA0D92">int</span> <span style="color: #000000">x</span> <span style="color: #000000">=</span> <span style="color: #2300CE">5</span>;
+
+<span style="color: #177500">// Prints int (i) rather than const int&amp; (KiR)</span>
+<span style="color: #000000">f</span>(<span style="color: #000000">x</span>);
+</code></pre>
+
+<p>The solution is to use the boost::typeindex library:</p>
+
+<pre title="C++" style="color: #000000; font-family: monospace,monospace; font-size: 0.9em; white-space: pre-wrap; word-wrap: break-word; border: 1px solid #cccccc; border-radius: 3px; overflow: auto; padding: 6px 10px; margin-bottom: 10px;background-color:#ffffff;"><code style="color: black; font-family: monospace,monospace; font-size: 0.9em;"><span style="color: #633820">#include &lt;boost/type_index.hpp&gt;</span>
+
+<span style="color: #AA0D92">template</span><span style="color: #000000">&lt;</span><span style="color: #AA0D92">typename</span> <span style="color: #000000">T&gt;</span>
+<span style="color: #AA0D92">void</span> <span style="color: #000000">f</span>(<span style="color: #AA0D92">const</span> <span style="color: #000000">T&amp;</span> <span style="color: #000000">value</span>)
+{
+    <span style="color: #AA0D92">using</span> <span style="color: #000000">boost::typeindex::type_id_with_cvr</span>;
+
+    <span style="color: #AA0D92">auto</span> <span style="color: #000000">representation</span> <span style="color: #000000">=</span> <span style="color: #000000">type_id_with_cvr&lt;decltype</span>(<span style="color: #000000">value</span>)<span style="color: #000000">&gt;</span>();
+
+    <span style="color: #000000">std::cout</span> <span style="color: #000000">&lt;&lt;</span> <span style="color: #000000">representation</span>.<span style="color: #000000">pretty_name</span>() <span style="color: #000000">&lt;&lt;</span> <span style="color: #000000">std::endl</span>;
+}
+
+<span style="color: #AA0D92">int</span> <span style="color: #000000">x</span> <span style="color: #000000">=</span> <span style="color: #2300CE">5</span>;
+
+<span style="color: #177500">// Prints int const&amp;</span>
+<span style="color: #000000">f</span>(<span style="color: #000000">x</span>);
+</code></pre>
+</body></html>

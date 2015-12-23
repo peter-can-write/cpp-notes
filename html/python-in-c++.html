@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="519.0070190429688"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-08-01 19:26:37 +0000"/><meta name="latitude" content="46.62866939096333"/><meta name="longitude" content="13.82439956085214"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-08-01 19:36:12 +0000"/><title>Python in C++</title></head><body>
+<div>zip:</div>
+<div><br/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">template</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">typename</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">T&gt;<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">class</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">Zip<br/>
+{<br/>
+   <br/></span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">public</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">:<br/>
+   </span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">    </span></span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">using</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">container_t =</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">vector</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;T&gt;;</span></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">   <br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">template</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">typename</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">... Args&gt;<br/>
+    Zip(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">T&amp; head,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">Args&amp;... args)<br/>
+    : _items(head.size()),<br/>
+      _min(head.size())<br/>
+    {<br/>
+        _zip(head, args...);<br/>
+    }<br/>
+   <br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">inline</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">operator</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">container_t</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">()</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+    {<br/>
+       </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">return</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">_items;<br/>
+    }<br/>
+   <br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">inline</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">container_t</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">operator</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">()()</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+    {<br/>
+       </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">return</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">_items;<br/>
+    }<br/>
+   <br/></span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">private</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">:<br/>
+   <br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">template</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">typename</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">... Args&gt;<br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">void</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">_zip(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">T&amp; head,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">Args&amp;... tail)<br/>
+    {<br/>
+       </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// If the current item's size is less than</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+       </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// the one stored in _min, reset the _min</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+       </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// variable to the item's size</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+       </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">if</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(head.size() &lt; _min) _min = head.size();<br/>
+       <br/>
+       </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">for</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">size_t</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">i =</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">0</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">; i &lt; _min; ++i)<br/>
+        {<br/>
+           </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// Use begin iterator and advance it instead</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+           </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// of using the subscript operator adds support</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+           </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// for lists. std::advance has constant complexity</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+           </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// for STL containers whose iterators are</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+           </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// RandomAccessIterators (e.g. vector or deque)</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+           </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">typename</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">T::_constiterator j = head.begin();<br/>
+           <br/>
+           </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::advance(j, i);<br/>
+           <br/>
+           </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// Append to current set of items</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+            _items[i]._pushback(*j);<br/>
+        }<br/>
+       <br/>
+       </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// Recursive call to _zip(T, Args...)</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+       </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// while the expansion of tail... is not empty</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+       </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// else calls the overload with no parameters</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+        _zip(tail...);<br/>
+    }<br/>
+<br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">inline</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">void</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">_zip()<br/>
+    {<br/>
+       </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// If _min has shrunk since the</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+       </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// constructor call we resize</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+       </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// one last time</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+        _items.resize(_min);<br/>
+    }<br/>
+<br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">/*! Holds the items for iterating. */</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">container_t</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">_items;<br/>
+   <br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">/*! The minimum number of values held by all items */</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">size_t</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">_min;<br/>
+   <br/>
+};<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">template</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">typename</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">T,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">typename</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">... Args&gt;<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">typename</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #4f8187">Zip</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;T&gt;::container_t zip(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">T&amp; head,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">Args&amp;... tail)<br/>
+{<br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">return</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #4f8187">Zip</span><span style="font-style: normal; font-variant: normal; font-weight: normal; line-height: normal;"><span style="font-size: 11px;"><span style="font-family: Menlo;">&lt;T&gt;(head, tail...);</span></span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">}</span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;"><br/></span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">range:</span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;"><br/></span></span></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">class</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">range<br/>
+{<br/>
+   <br/></span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">public</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">:<br/>
+   <br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">using</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">iterator =</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">vector</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">long</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&gt;::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">iterator</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">;<br/>
+   <br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">using</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">const_iterator =</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">vector</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">long</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&gt;::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">const_iterator</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">;<br/>
+   <br/>
+    range(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">long</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">end)<br/>
+    :</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #4f8187">range</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">0</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">, end)<br/>
+    { }<br/>
+   <br/>
+    range(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">long</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">begin,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">long</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">end,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">long</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">step =</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">1</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">)<br/>
+    {<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">if</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(end - begin &gt;</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">0</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&amp;&amp; step &gt;</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">0</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">)<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">while</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(begin &lt; end)<br/>
+{<br/>
+_range.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">push_back</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(begin);<br/>
+<br/>
+begin += step;<br/>
+}<br/>
+}<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">else</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">if</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(end - begin &lt;</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">0</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&amp;&amp; step &lt;</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">0</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">)<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">while</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(begin &gt; end)<br/>
+{<br/>
+_range.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">push_back</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(begin);<br/>
+<br/>
+begin += step;<br/>
+}<br/>
+}<br/>
+    }<br/>
+   <br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">iterator</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">begin()<br/>
+    {<br/>
+       </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">return</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">_range.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">begin</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">();<br/>
+    }<br/>
+   <br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">const_iterator</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">begin()</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+    {<br/>
+       </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">return</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">_range.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">begin</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">();<br/>
+    }<br/>
+   <br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">iterator</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">end()<br/>
+    {<br/>
+       </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">return</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">_range.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">end</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">();<br/>
+    }<br/>
+   <br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">const_iterator</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">end()</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+    {<br/>
+       </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">return</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">_range.</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">end</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">();<br/>
+    }<br/>
+   <br/></span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">private</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">:<br/>
+   <br/>
+   </span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">vector</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">long</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&gt; _range;</span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">};</span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;"><br/></span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">print:</span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;"><br/></span></span></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">void</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">print()<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">cout</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;&lt;</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">endl</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">;<br/>
+}<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">template</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">typename</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">Head,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">typename</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">... Tail&gt;<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">void</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">print(Head&amp;&amp; head, Tail&amp;&amp;... tail)<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">cout</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;&lt;</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::forward&lt;Head&gt;(head);<br/>
+<br/>
+print(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #02a1f3">std</span><span style="font-style: normal; font-variant: normal; font-weight: normal; line-height: normal;"><span style="font-size: 11px;"><span style="font-family: Menlo;">::forward&lt;Tail&gt;(tail)...);</span></span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">}</span></span></div>
+</body></html>

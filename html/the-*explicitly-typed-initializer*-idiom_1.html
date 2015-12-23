@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="keywords" content="auto, C++, C++11, C++14"/><meta name="created" content="2015-10-19 08:34:19 +0000"/><meta name="updated" content="2015-10-19 08:34:19 +0000"/><title>The *explicitly-typed-initializer* idiom</title></head><body>
+<!-- Sublime:LS0tCnRpdGxlOiBUaGUgKmV4cGxpY2l0bHktdHlwZWQtaW5pdGlhbGl6ZXIqIGlkaW9tCm5vdGVib29rOiBDKysKdGFnczpDKyssIEMrKzExLCBDKysxNCwgYXV0bwotLS0KClVzZSB0aGUgKmV4cGxpY2l0bHktdHlwZWQtaW5pdGlhbGl6ZXIqIGlkaW9tIHdoZW4gY2FzdGluZy4gRS5nLiB3aGVuIHlvdSBoYXZlIGEgZnVuY3Rpb24gcmV0dXJuaW5nIGEgZG91YmxlLCBidXQgeW91IHdhbnQgdG8gdXNlIGxlc3MgbWVtb3J5IGFuZCBhcmUgZmluZSB3aXRoIGEgYGZsb2F0YCwgeW91IGNhbiBqdXN0IHN0b3JlIGl0IGluIGEgZmxvYXQuIEhvd2V2ZXIsIHJhdGhlciB0aGFuIHNwZWNpZnlpbmcgYGZsb2F0YCBhcyBhIHR5cGUsIHlvdSBzaG91bGQgcmF0aGVyIGRlbGliZXJhdGVseSBtYWtlIGNsZWFyIHRoYXQgeW91IGFyZSByZWR1Y2luZyB0aGUgcHJlY2lzaW9uIG9mIHRoZSB0eXBlLiBTYW1lIGdvZXMgZm9yIGludGVncmFsIHR5cGVzICh3aGVyZSBhIHdhcm5pbmcgZm9yIGEgcmVkdWN0aW9uIG9mIGJpdHdpZHRoIGlzIGlzc3VlZCBhbnl3YXkpLgoKCmBgYEMrKwpkb3VibGUgY2FsY3VsYXRlX2Vwc2lsb24oKQp7CglyZXR1cm4gLyogLi4uICovOwp9CgovLyBOTyEKZmxvYXQgZXBzaWxvbiA9IGNhbGN1bGF0ZV9lcHNpbG9uKCk7CgovLyBZRVMhCmF1dG8gZXBzaWxvbiA9IHN0YXRpY19jYXN0PGZsb2F0PihjYWxjdWxhdGVfZXBzaWxvbigpKTsKYGBgCgo=-->
+<p>Use the <em>explicitly-typed-initializer</em> idiom when casting. E.g. when you have a function returning a double, but you want to use less memory and are fine with a <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">float</code>, you can just store it in a float. However, rather than specifying <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">float</code> as a type, you should rather deliberately make clear that you are reducing the precision of the type. Same goes for integral types (where a warning for a reduction of bitwidth is issued anyway).</p>
+
+<pre title="C++" style="color: #000000; font-family: monospace,monospace; font-size: 0.9em; white-space: pre-wrap; word-wrap: break-word; border: 1px solid #cccccc; border-radius: 3px; overflow: auto; padding: 6px 10px; margin-bottom: 10px;background-color:#ffffff;"><code style="color: black; font-family: monospace,monospace; font-size: 0.9em;"><span style="color: #AA0D92">double</span> <span style="color: #000000">calculate_epsilon</span>()
+{
+    <span style="color: #AA0D92">return</span> <span style="color: #177500">/* ... */</span>;
+}
+
+<span style="color: #177500">// NO!</span>
+<span style="color: #AA0D92">float</span> <span style="color: #000000">epsilon</span> <span style="color: #000000">=</span> <span style="color: #000000">calculate_epsilon</span>();
+
+<span style="color: #177500">// YES!</span>
+<span style="color: #AA0D92">auto</span> <span style="color: #000000">epsilon</span> <span style="color: #000000">=</span> <span style="color: #AA0D92">static_cast</span><span style="color: #000000">&lt;</span><span style="color: #AA0D92">float</span><span style="color: #000000">&gt;</span>(<span style="color: #000000">calculate_epsilon</span>());
+</code></pre>
+</body></html>

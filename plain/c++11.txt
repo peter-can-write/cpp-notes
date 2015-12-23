@@ -1,0 +1,60 @@
+# c++11
+
+The AUTO keyword can be used to make the compiler automatically deduce
+the type of an object from its initializer.
+
+Instead of: std::map<std::vector<unsigned long>, std::map<unsigned
+short, long>>::const_iterator itr = map.begin()
+
+Now use: auto itr = map.begin()
+
+RANGE BASED FOR LOOPS are especially nice for iterating over containers:
+
+std::vector<int> vec
+
+for (auto itr : vec) { ++(*itr); }
+
+The OVERRIDE identifier can be used to mark derived methods as overrides
+of base class virtual functions. The FINAL  identifier makes it
+impossible for derived classes to implement a certain virtual method.
+
+class A
+
+{
+
+public:
+
+     virtual void foo();
+
+};
+
+class B : public A
+
+{
+
+public:
+
+     virtual void foo() override final; // makes compiler know that this
+is an override, will check for correct types; makes it impossible for
+derived classes to override that method
+
+};
+
+class C : public B
+
+{
+
+public:
+
+     virtual void foo(); // Error! B marked foo() as final!
+
+};
+
+To set certain functions to their C++ default, use the DEFAULT keyword
+after functions. E.g., for default constructors that you still want to
+have defined (for smart pointers for example) but don’t want to have any
+custom implementation:
+
+~Foo() = default;
+
+

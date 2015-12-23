@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="keywords" content="C++, C++11, C++14, decltype, templates"/><meta name="created" content="2015-10-17 16:06:36 +0000"/><meta name="updated" content="2015-10-17 16:38:20 +0000"/><title>`decltype` Deduction Rules</title></head><body>
+<!-- Sublime:LS0tCnRpdGxlOiBgZGVjbHR5cGVgIERlZHVjdGlvbiBSdWxlcwpub3RlYm9vazogQysrCnRhZ3M6QysrLCBDKysxMSwgQysrMTQsIFRlbXBsYXRlcywgZGVjbHR5cGUKLS0tCgpUaGUgZ3JlYXQgdGhpbmcgYWJvdXQgZGVjbHR5cGUgaXMgdGhhdCBpdCAoYWxtb3N0KSBkb2VzIG5vdCBoYXZlIGFueSBmYW5jeSBydWxlcyByZWdhcmRpbmcgd2hhdCB0eXBlcyBpdCBkZWR1Y2VzIChyZXR1cm5zKS4gSW4gOTklIG9mIGFsbCBjYXNlcywgdGhlIHR5cGUgeW91IGdldCBmcm9tIGBkZWNsdHlwZSh4KWAgaXMgdGhlIHR5cGUgd2l0aCB3aGljaCB5b3UgZGVjbGFyZWQgYHhgOgoKYGBgQysrCi8vIGRlY2x0eXBlKGkpID0gY29uc3QgaW50CmNvbnN0IGludCBpID0gMDsKCi8vIGRlY2x0eXBlKG9iamVjdCkgPSBjb25zdCBUJgovLyBkZWNsdHlwZShmKSA9IGJvb2woY29uc3QgVCYpCnRlbXBhbHRlPHR5cGVuYW1lIFQ+CmJvb2wgZihjb25zdCBUJiBvYmplY3QpOwoKLy8gZGVjbHR5cGUob2JqKSA9IE9iamVjdApPYmplY3Qgb2JqOwoKZihvYmopOyAvLyBkZWNsdHlwZShmKG9iaikpID0gYm9vbAoKdGVtcGxhdGU8dHlwZW5hbWUgVD4KY2xhc3MgRm9vCnsKCS8qIC4uLiAqLwp9OwoKLy8gZGVjbHR5cGUoZm9vKSA9IEZvbzxpbnQ+CkZvbzxpbnQ+IGZvbzsKYGBgCgpLbm93biBjb3JuZXIgY2FzZTogYGRlY2x0eXBlKG9iamVjdC5tZW1iZXIpYAoKTm9ybWFsbHksIGFjY2Vzc2luZyBhbiBvYmplY3QncyBtZW1iZXIgZWl0aGVyIHVzaW5nIGRvdC1ub3RhdGlvbiAoYG9iamVjdC5tZW1iZXJgKSBvciB1c2luZyBhcnJvdy1ub3RhdGlvbiB3aXRoIHBvaW50ZXJzIChgb2JqZWN0LT5tZW1iZXJgKSB5aWVsZHMgYSByZWZlcmVuY2UgdG8gdGhlIG1lbWJlciwgaS5lLiBpZiB0aGUgbWVtYmVyIGlzIGFuIGBpbnRgIHRoZSB0eXBlIG9mIGBvYmplY3QubWVtYmVyYCB3aWxsIGJlIGBpbnQmYC4gSG93ZXZlciwgdGhpcyBleHBlY3RhdGlvbiBkb2VzIG5vdCByZWZsZWN0IGluIHRoZSByZXN1bHQgb2YgYSBjYWxsIHRvIGRlY2x0eXBlIGZvciB0aGlzIHNjZW5hcmlvOgoKYGBgQysrCk9iamVjdCBvYmplY3Q7CgpkZWNsdHlwZShvYmplY3QubWVtYmVyKTsgLy8geWllbGRzIHR5cGUgb2YgbWVtYmVyLCBub3QgdHlwZSYKCmRlY2x0eXBlKCgmb2JqZWN0KS0+bWVtYmVyKTsgLy8gYWxzbyB0eXBlJgpgYGAKClRoZSBzb2x1dGlvbiBpbnRyb2R1Y2VzIHRoZSBzZWNvbmQgcGVjdWxpYXJpdHkgZm9yIGBkZWNsdHlwZSgpYCwgdGhhdCBgZGVjbHR5cGUoeClgIGNhbiBkaWZmZXIgZnJvbSBgZGVjbHR5cGUoKHgpKWAuIE1vcmUgc3BlY2lmaWNhbGx5LCBpbiBhbGwgY2FzZXMgYnV0IHRoZSBhYm92ZSwgY2FsbGluZyBkZWNsdHlwZSB3aXRoIGEgYG5hbWVgIHByb2RjdWNlcyB0aGUgdHlwZSBvZiB0aGF0IG5hbWUsIHdoaWxlIHdyYXBwaW5nIHRoYXQgbmFtZSBpbiBwYXJhbnRoZXNlcyBnaXZlcyB5b3UgYW4gKmV4cHJlc3Npb24qLiBBbiBleHByZXNzaW9uIGlzIG1vcmUgY29tcGxpY2F0ZWQgdGhhbiBhIG5hbWUgYW5kICphbG1vc3QgYWx3YXlzKiBwcm9kdWNlcyBhIHJlZmVyZW5jZSB0byB0aGUgdHlwZSBvZiB0aGUgbmFtZToKCmBgYEMrKwppbnQgeCA9IDU7CgpkZWNsdHlwZSh4KTsgLy8gaW50CgpkZWNsdHlwZSgoeCkpOyAvLyBpbnQmCmBgYAoKVGhpcyBzb2x2ZXMgdGhlIHByb2JsZW0gZm9yIGFib3ZlIChtZW1iZXIgYWNjZXNzKToKCmBgYEMrKwpPYmplY3Qgb2JqZWN0OwoKZGVjbHR5cGUob2JqZWN0Lm1lbWJlcik7IC8vIHR5cGUKCmRlY2x0eXBlKChvYmplY3QubWVtYmVyKSkgLy8gdHlwZSYKYGBg-->
+<p>The great thing about decltype is that it (almost) does not have any fancy rules regarding what types it deduces (returns). In 99% of all cases, the type you get from <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">decltype(x)</code> is the type with which you declared <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">x</code>:</p>
+
+<pre title="C++" style="color: #000000; font-family: monospace,monospace; font-size: 0.9em; white-space: pre-wrap; word-wrap: break-word; border: 1px solid #cccccc; border-radius: 3px; overflow: auto; padding: 6px 10px; margin-bottom: 10px;background-color:#f8f8f8;"><code style="color: black; font-family: monospace,monospace; font-size: 0.9em;"><span style="color: #999988; font-style: italic">// decltype(i) = const int</span>
+<span style="color: #000000; font-weight: bold">const</span> <span style="color: #445588; font-weight: bold">int</span> i <span style="color: #000000; font-weight: bold">=</span> <span style="color: #009999">0</span>;
+
+<span style="color: #999988; font-style: italic">// decltype(object) = const T&amp;</span>
+<span style="color: #999988; font-style: italic">// decltype(f) = bool(const T&amp;)</span>
+tempalte<span style="color: #000000; font-weight: bold">&lt;typename</span> T<span style="color: #000000; font-weight: bold">&gt;</span>
+<span style="color: #445588; font-weight: bold">bool</span> f(<span style="color: #000000; font-weight: bold">const</span> T<span style="color: #000000; font-weight: bold">&amp;</span> object);
+
+<span style="color: #999988; font-style: italic">// decltype(obj) = Object</span>
+Object obj;
+
+f(obj); <span style="color: #999988; font-style: italic">// decltype(f(obj)) = bool</span>
+
+<span style="color: #000000; font-weight: bold">template&lt;typename</span> T<span style="color: #000000; font-weight: bold">&gt;</span>
+<span style="color: #000000; font-weight: bold">class</span> <span style="color: #445588; font-weight: bold">Foo</span>
+{
+    <span style="color: #999988; font-style: italic">/* ... */</span>
+};
+
+<span style="color: #999988; font-style: italic">// decltype(foo) = Foo&lt;int&gt;</span>
+Foo<span style="color: #000000; font-weight: bold">&lt;</span><span style="color: #445588; font-weight: bold">int</span><span style="color: #000000; font-weight: bold">&gt;</span> foo;
+</code></pre>
+
+<p>Known corner case: <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">decltype(object.member)</code></p>
+
+<p>Normally, accessing an object's member either using dot-notation (<code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">object.member</code>) or using arrow-notation with pointers (<code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">object-&gt;member</code>) yields a reference to the member, i.e. if the member is an <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">int</code> the type of <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">object.member</code> will be <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">int&amp;</code>. However, this expectation does not reflect in the result of a call to decltype for this scenario:</p>
+
+<pre title="C++" style="color: #000000; font-family: monospace,monospace; font-size: 0.9em; white-space: pre-wrap; word-wrap: break-word; border: 1px solid #cccccc; border-radius: 3px; overflow: auto; padding: 6px 10px; margin-bottom: 10px;background-color:#f8f8f8;"><code style="color: black; font-family: monospace,monospace; font-size: 0.9em;">Object object;
+
+decltype(object.member); <span style="color: #999988; font-style: italic">// yields type of member, not type&amp;</span>
+
+decltype((<span style="color: #000000; font-weight: bold">&amp;</span>object)<span style="color: #000000; font-weight: bold">-&gt;</span>member); <span style="color: #999988; font-style: italic">// also type&amp;</span>
+</code></pre>
+
+<p>The solution introduces the second peculiarity for <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">decltype()</code>, that <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">decltype(x)</code> can differ from <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">decltype((x))</code>. More specifically, in all cases but the above, calling decltype with a <code style="color: #000000; font-family: monospace,monospace; padding: 0.1em 0.2em; margin: 0.1em; font-size: 85%; background-color: #F5F5F5; border-radius: 3px; border: 1px solid #cccccc;">name</code> prodcuces the type of that name, while wrapping that name in parantheses gives you an <em>expression</em>. An expression is more complicated than a name and <em>almost always</em> produces a reference to the type of the name:</p>
+
+<pre title="C++" style="color: #000000; font-family: monospace,monospace; font-size: 0.9em; white-space: pre-wrap; word-wrap: break-word; border: 1px solid #cccccc; border-radius: 3px; overflow: auto; padding: 6px 10px; margin-bottom: 10px;background-color:#f8f8f8;"><code style="color: black; font-family: monospace,monospace; font-size: 0.9em;"><span style="color: #445588; font-weight: bold">int</span> x <span style="color: #000000; font-weight: bold">=</span> <span style="color: #009999">5</span>;
+
+decltype(x); <span style="color: #999988; font-style: italic">// int</span>
+
+decltype((x)); <span style="color: #999988; font-style: italic">// int&amp;</span>
+</code></pre>
+
+<p>This solves the problem for above (member access):</p>
+
+<pre title="C++" style="color: #000000; font-family: monospace,monospace; font-size: 0.9em; white-space: pre-wrap; word-wrap: break-word; border: 1px solid #cccccc; border-radius: 3px; overflow: auto; padding: 6px 10px; margin-bottom: 10px;background-color:#f8f8f8;"><code style="color: black; font-family: monospace,monospace; font-size: 0.9em;">Object object;
+
+decltype(object.member); <span style="color: #999988; font-style: italic">// type</span>
+
+decltype((object.member)) <span style="color: #999988; font-style: italic">// type&amp;</span>
+</code></pre>
+</body></html>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="478.5169982910156"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-09-21 22:52:14 +0000"/><meta name="latitude" content="48.25686248814288"/><meta name="longitude" content="11.65509006337584"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-09-21 22:55:50 +0000"/><title>std::generate</title></head><body>
+<div>You can fill a range with a value using std::fill:</div>
+<div><br/></div>
+<div>std::vector&lt;std::size_t&gt; v(10);</div>
+<div><br/></div>
+<div>std::fill(v.begin(), v.end(), 5); // fills the range with fives</div>
+<div><br/></div>
+<div>But if you have a function that returns different values at each subsequent call, use the std::generate:</div>
+<div><br/></div>
+<div>std::size_t foo()</div>
+<div>{</div>
+<div>     static std::size_t count = 0;</div>
+<div><br/></div>
+<div>     return count++;</div>
+<div>}</div>
+<div><br/></div>
+<div>std::generate(v.begin(), v.end(), foo); // sets *itr = foo() at each call</div>
+<div><br/></div>
+<div>or assign to only a certain number of elements with std::generate_n:</div>
+<div><br/></div>
+<div>template&lt;typename Itr, typename Function&gt;</div>
+<div>std::generate_n(Itr destination, std::size_t count, Function function);</div>
+<div><br/></div>
+<div>std::generate(v.begin(), 3, foo); // assign foo() to three elements starting at v.begin()</div>
+</body></html>

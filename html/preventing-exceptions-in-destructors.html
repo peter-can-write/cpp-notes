@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="518"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-02-28 17:25:54 +0000"/><meta name="latitude" content="46.62858276367184"/><meta name="longitude" content="13.82443237304688"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-02-28 17:26:01 +0000"/><title>Preventing exceptions in destructors</title></head><body>
+<div>
+<div><span style="font-family: 'Helvetica Neue';">Prevent exceptions from leaving destructors. If you fear that a destructor may have to call a function that may throw an error, provide the user with an explicit function to “close” or “destruct” the object where the user</span></div>
+<div><span style="font-family: 'Helvetica Neue';">can handle exceptions. Inside the destructor, should an exception arise when calling that closing function (given the user didn’t do so before, so have a private boolean member), either:</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<ol>
+<li><span style="font-family: 'Helvetica Neue';">Abort the program after logging some information. If the program can’t continue to function after an error was emitted inside the constructor, e.g. some vital things couldn’t be closed, terminate the program by calling std::abort().</span></li>
+<li><span style="font-family: 'Helvetica Neue';">Silence, or “swallow”, the exception, by having a try-catch block inside the destructor for that closing function and then just logging that it threw an exception, like “Closing failed!”.</span></li>
+</ol>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div>
+<div><span style="font-family: 'Helvetica Neue';">These two things above don’t actually solve the problem of handling exceptions and giving the user options of how to react, but we already do so by giving the user the chance to catch exceptions with the explicit “close” function, so he or she</span></div>
+<div><span style="font-family: 'Helvetica Neue';">can’t complain if we don’t handle the exception in the destructor. </span></div>
+</div>
+</div>
+<div><br/></div>
+</body></html>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="478.5470581054688"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-11-30 19:48:45 +0000"/><meta name="latitude" content="48.25686671842241"/><meta name="longitude" content="11.65508752795857"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-11-30 19:52:14 +0000"/><title>std::forward_list</title></head><body>
+<div>std::forward_list is a new singly-linked list container in the standard (as opposed to std::list, which is doubly-linked). If you do not need bidirectional iteration, use this list, as it is more space-efficient (one pointer less).</div>
+<div><br/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">std::forward_list&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&gt; list;<br/>
+<br/>
+list.emplace_front(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">5</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">);<br/>
+<br/>
+list.insert_after(list.begin(),</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">6</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">);<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// ForwardIterator</span></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">for</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">auto</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">i : list) print::ln(i);</span></div>
+</body></html>

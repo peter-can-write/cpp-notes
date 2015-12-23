@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="518"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-02-28 17:09:36 +0000"/><meta name="latitude" content="46.62858276367184"/><meta name="longitude" content="13.82443237304688"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-02-28 17:31:07 +0000"/><title>Const pointers and pointers to const</title></head><body>
+<div><span style="font-family: 'Helvetica Neue';">Pointer to a const object of type foo that does not allow modification of the data:</span></div>
+<div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">const foo * name;</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">Const pointer that does not allow changing of what it points to, it cannot be pointed to another</span></div>
+<div><span style="font-family: 'Helvetica Neue';">object, only to this one object<b>:</b></span></div>
+<div><span style="font-family: 'Helvetica Neue';"><b><br/></b></span></div>
+<div><span style="font-family: 'Helvetica Neue';">foo * const name;</span></div>
+</div>
+<div><br/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">x =</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">5</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">;<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">y =</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">23</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">;<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">* p = &amp;x;<br/>
+<br/>
+*p =</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">12</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">;</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// Error, cannot change x</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+   <br/>
+p = &amp;y;</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// Ok, can reassign pointer</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">*</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">q = &amp;x;<br/>
+<br/>
+*q =</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">50</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">;</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// Ok, can change x</span><span style="font-style: normal; font-variant: normal; font-weight: normal; line-height: normal;"><span style="font-size: 11px;"><span style="font-family: Menlo;"><br/>
+<br/></span></span></span></div>
+<div><span style="font-family: Menlo;"><span style="font-size: 11px;">q = &amp;y; <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// Error, cannot reassing pointer</span></span></span></div>
+</body></html>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="478.5339660644531"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-11-30 19:46:00 +0000"/><meta name="latitude" content="48.25692673766876"/><meta name="longitude" content="11.65517282700545"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-11-30 19:47:44 +0000"/><title>direct vs copy initialization</title></head><body>
+<div>Direct initialization is with parantheses or braces (given there is no equivalent constructor taking an initializer_list):</div>
+<div><br/></div>
+<div>Object object(argument);</div>
+<div>Object object{argument};</div>
+<div><br/></div>
+<div>Copy initialization works with assignment = (but still calls constructor):</div>
+<div><br/></div>
+<div>Object object = argument;</div>
+<div><br/></div>
+<div>You are allowed to call explicit constructors with direct-initialization, but not copy-initialization.</div>
+</body></html>

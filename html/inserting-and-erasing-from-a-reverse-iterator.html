@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="519"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-08-29 19:10:12 +0000"/><meta name="latitude" content="46.62865485119038"/><meta name="longitude" content="13.82445929220225"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-08-29 19:23:23 +0000"/><title>Inserting and erasing from a reverse iterator</title></head><body>
+<div>Any container’s insert() method only accepts non-reverse, non-const iterators. Therefore, you must convert using base(), but do a few more alterations:</div>
+<div><br/></div>
+<div><b>To insert:</b></div>
+<div><br/></div>
+<div>Insertion always happens in a way that the new element is inserted <i>at</i> the position of the iterator (i.e. the new element will be before the old one). For forward iterators, this means:</div>
+<div><br/></div>
+<div>[0, 1, 2, 3]</div>
+<div>      ^ insert 7 here</div>
+<div><br/></div>
+<div>Result: [0, 7, 1 ,2, 3]</div>
+<div><br/></div>
+<div>For a reverse iterator, you would call itr.base(). This returns an iterator to one position to the right of the reverse iterator’s position (to handle rbegin/end). Now, you could say the insertion doesn’t do what you want, from the view of a forward iterator:</div>
+<div><br/></div>
+<div>[0, 1, 2, 3]</div>
+<div>      ^ insert 7 here (from reverse iterator)</div>
+<div><br/></div>
+<div>call insert(itr.base(), 7)</div>
+<div><br/></div>
+<div>[0, 1, 2, 3]</div>
+<div>          ^ itr.base() points here</div>
+<div><br/></div>
+<div>Result: [0, 1, 7, 2, 3]</div>
+<div><br/></div>
+<div>So not “before" the reverse iterator? But if you think about it, it did insert it <i>before</i> the reverse iterator, if you consider that it moves from right to left. So the corresponding action to insert for a reverse iterator is really to insert at itr.base(), but consider if it matches your expectations.</div>
+<div><br/></div>
+<div><br/></div>
+<div><b>To erase:</b></div>
+<div><b><br/></b></div>
+<div>To erase, you really want a pointer to the item being pointed to by the reverse iterator. So your first intuition may be to do the standard thing: convert to base and decrement (base() returns iterator to the following element):</div>
+<div><br/></div>
+<div>container.erase(—itr.base(), 7)</div>
+<div><br/></div>
+<div>However, <b><i>often</i></b> iterators are typedefs for pointers (for strings and vectors), and C++ doesn’t allow modification of rvalue pointers. So just increment the reverse iterator before:</div>
+<div><br/></div>
+<div>container.erase((++itr).base())</div>
+</body></html>

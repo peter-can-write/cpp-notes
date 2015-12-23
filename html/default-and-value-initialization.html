@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="518"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-04-09 20:02:02 +0000"/><meta name="latitude" content="46.62858276367184"/><meta name="longitude" content="13.82443237304688"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-08-01 23:30:33 +0000"/><title>Default and value initialization</title></head><body>
+<div>If you do not explicitly define a constructor for a class, the compiler will generate a default-constructor, which usually does nothing. More precisely, it is equivalent to a user-defined constructor with an empty body and initializer-list.</div>
+<div><br/></div>
+<div>class Foo</div>
+<div>{</div>
+<div>public:</div>
+<div><br/></div>
+<div>     int x;</div>
+<div>};</div>
+<div><br/></div>
+<div>Foo foo; // x contains garbage</div>
+<div><br/></div>
+<div>However, if there is no user-defined constructor and the class is constructed with the Foo() syntax, the compiler will not actually call the default-constructor, but value-intialize the class. This only happens in these cases:</div>
+<div><br/></div>
+<div>Foo foo = Foo(); // x = 0</div>
+<div><br/></div>
+<div>Foo* foo = new Foo(); // foo-&gt;x = 0</div>
+<div><br/></div>
+<div>Source: <a href="http://stackoverflow.com/questions/2417065/does-the-default-constructor-initialize-built-in-types">http://stackoverflow.com/questions/2417065/does-the-default-constructor-initialize-built-in-types</a></div>
+</body></html>

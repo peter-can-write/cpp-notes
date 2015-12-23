@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="518"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-03-27 20:21:54 +0000"/><meta name="latitude" content="46.62858276367184"/><meta name="longitude" content="13.82443237304688"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-03-27 22:25:12 +0000"/><title>Item 50: Customizing operator new or operator delete</title></head><body>
+<div>Reasons to overload operator new() / operator delete():</div>
+<div><br/></div>
+<ul>
+<li>To detect usage errors: you may want to perform some additional checks on your memory</li>
+</ul>
+<div><br/></div>
+<ul>
+<li>To improve efficiency: C++’s globally-scoped operator new() is very general, for small and large allocations, many and few, short- and long-lived. It may be beneficial to optimize the new function for your class’ memory usage</li>
+</ul>
+<div><br/></div>
+<ul>
+<li>To collect usage statistics: to do the above, it is a good idea to profile your program to see whether the allocation/deallocation patterns are random order, LIFO, FIFO, what sizes they are, their lifespan etc.</li>
+</ul>
+<div><br/></div>
+<ul>
+<li>To obtain unconventional behavior. This varies depending on the problem at hand, but one example is overwriting deleted memory with zeros for extra security.</li>
+</ul>
+<div><br/></div>
+</body></html>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="478.9946899414062"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-11-13 18:07:42 +0000"/><meta name="latitude" content="48.2569003861132"/><meta name="longitude" content="11.6550312858587"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-11-13 18:15:38 +0000"/><title>Make sure const functions are thread-safe.</title></head><body>
+<div>You should make const member-functions thread-safe, unless you are 100% sure they’ll not be used in a concurrent context (rare nowadays). Consider this case:</div>
+<div><br/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">class</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">LazyInitializer<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">public</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">:<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">calculate()</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">if</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(! _have_calculated)<br/>
+{<br/>
+_have_calculated =</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">true</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">;<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// _value = very_expensive_computation</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+}<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">return</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">_value;<br/>
+}<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">private</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">:<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">mutable</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">bool</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">_have_calculated;<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">mutable</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">bool</span> <span style="font-style: normal; font-variant: normal; font-weight: normal; line-height: normal;"><span style="font-size: 11px;"><span style="font-family: Menlo;">_value;</span></span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">};</span></span></div>
+<div><br/></div>
+<div>Here is a class which, as a side-effect/utility, can calculate some value that does not change the state of the object conceptually (e.g. this class holds an equation, and that stays const, so the method is conceptually const). There are two cases of how this method is not thread-safe:</div>
+<div><br/></div>
+<ol>
+<li>Thread One calls calculate() because _have_calculated is false</li>
+<li>Before _have_calculated is set to true by Thread One, also Thread Two makes it through the if-statement</li>
+<li>The very-expensive computation is performed twice</li>
+</ol>
+<div><br/></div>
+<ol>
+<li>Thread One calls calculate() because _have_calculated is false</li>
+<li>_have_calculated becomes true in Thread One</li>
+<li>Thread Two calls calculate() and there _have_calculated is true,</li>
+<li>So it goes on to return _value, which is not yet initialized!</li>
+<li>Thread One calculates the value ...</li>
+</ol>
+<div><br/></div>
+<div>So use a mutex (std::atomic won’t work, because both value and _have_calculated would have to be atomic and atomic works best with only one variable):</div>
+<div><br/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">class</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">LazyInitializer<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">public</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">:<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">calculate()</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">lock_guard</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&lt;</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">mutex</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&gt; lock(_mutex);<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">if</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(! _have_calculated)<br/>
+{<br/>
+_have_calculated =</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">true</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">;<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// _value = very_expensive_computation</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+}<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">return</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">_value;<br/>
+}<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">private</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">:<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">mutable</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">bool</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">_have_calculated;<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">mutable</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">bool</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">_value;<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">mutable</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #703daa">mutex</span> <span style="font-style: normal; font-variant: normal; font-weight: normal; line-height: normal;"><span style="font-size: 11px;"><span style="font-family: Menlo;">_mutex;</span></span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">};</span></span></div>
+</body></html>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="518"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-02-28 17:23:34 +0000"/><meta name="latitude" content="46.62858276367184"/><meta name="longitude" content="13.82443237304688"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-08-01 21:44:24 +0000"/><title>Making classes uncopyable</title></head><body>
+<div>
+<div><span style="font-family: 'Helvetica Neue';">Explicitly disallowing compiler-generated constructors, copy-constructors, destructors or assignment operators:</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">If I have a class Foo:</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">class Foo</span></div>
+<div><span style="font-family: 'Helvetica Neue';">{</span></div>
+<div><span style="font-family: 'Helvetica Neue';">public:</span></div>
+<div><span style="font-family: 'Helvetica Neue';">     Foo(){ }     </span></div>
+<div><span style="font-family: 'Helvetica Neue';">};</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">… that I don’t want to have copied, what do I do? If I don’t implement the copy-constructor, the compiler will do so for me.</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">Step 1: Make the copy-constructor private:</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">class Foo</span></div>
+<div><span style="font-family: 'Helvetica Neue';">{</span></div>
+<div><span style="font-family: 'Helvetica Neue';">public:</span></div>
+<div><span style="font-family: 'Helvetica Neue';">     Foo() { }</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">private:</span></div>
+<div><span style="font-family: 'Helvetica Neue';">     Foo(const Foo&amp; other);</span></div>
+<div><span style="font-family: 'Helvetica Neue';">     Foo&amp; operator=(const Foo&amp; other);</span></div>
+<div><span style="font-family: 'Helvetica Neue';">};</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">This means that no non-member or non-friend will be able to call the copy constructor. However, friends and members will be able to do so … </span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">Step 2: Don’t implement the functions</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">If I don’t implement those two functions, calling them will create linker errors!</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">Step 3: Make the linker error a compile-time error by making a special base class</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">class Uncopyable</span></div>
+<div><span style="font-family: 'Helvetica Neue';">{</span></div>
+<div><span style="font-family: 'Helvetica Neue';">protected:</span></div>
+<div><span style="font-family: 'Helvetica Neue';">     Uncopyable(){ }</span></div>
+<div><span style="font-family: 'Helvetica Neue';">     ~Uncopyable(){ }</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">private:</span></div>
+<div><span style="font-family: 'Helvetica Neue';">     Uncopyable(const Uncopyable&amp;); // Don’t need to give parameter names!</span></div>
+<div><span style="font-family: 'Helvetica Neue';">     Uncopyable&amp; operator=(const Uncopyable&amp;);</span></div>
+<div><span style="font-family: 'Helvetica Neue';">};</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">class Foo : private Uncopyable</span></div>
+<div><span style="font-family: 'Helvetica Neue';">{</span></div>
+<div>
+<div><span style="font-family: 'Helvetica Neue';">public:</span></div>
+<div><span style="font-family: 'Helvetica Neue';">     Foo(){ }</span></div>
+<div><span style="font-family: 'Helvetica Neue';">};</span></div>
+</div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">Making the Uncopyable class’s copy-constructors private and leaving them unimplemented means that if Foo inherits from it (private, meaning Uncopyable() will become private)</span></div>
+<div><span style="font-family: 'Helvetica Neue';">and if the compiler then tries to create a default copy-constructor, that would mean that it would also have to initialize the base class members, so it would call the base class copy</span></div>
+</div>
+<div><span style="font-family: 'Helvetica Neue';">constructor, which is, however, private, so Foo wouldn’t have access and copying a Foo object would create a compile-time error!</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">C++11:</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">class</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">Uncopyable</span></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">class</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">Uncopyable<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">public</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">:<br/>
+<br/>
+Uncopyable(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">x =</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">0</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">)<br/>
+: _x(x)<br/>
+{ }<br/>
+<br/>
+Uncopyable(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #4f8187">Uncopyable</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&amp; other) =</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">delete</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">;<br/>
+<br/>
+Uncopyable(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #4f8187">Uncopyable</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&amp;&amp; other);<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #4f8187">Uncopyable</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&amp;</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">operator</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">=(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #4f8187">Uncopyable</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">&amp; a) =</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">delete</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">;<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">private</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">:<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">_x;<br/>
+};<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">main(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">argc,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">char</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">* argv[])<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #4f8187">Uncopyable</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">a(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">5</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">);</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// OK, not a deleted overload of Uncopyable()</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #4f8187">Uncopyable</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">b(a);</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// Error: Call to deleted constructor of Uncopyable</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #4f8187">Uncopyable</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">c(std::move(a));</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// OK, not a deleted overload of Uncopyable()</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/>
+<br/>
+c = a;</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// Error: Overload resolution selected deleted operator '='</span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">}</span></span></div>
+<div><br/></div>
+</body></html>

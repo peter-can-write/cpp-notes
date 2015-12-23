@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="477.9984741210938"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-12-15 23:49:36 +0000"/><meta name="latitude" content="48.25680508870933"/><meta name="longitude" content="11.65518449070574"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-12-16 00:05:50 +0000"/><title>Argument Dependent Lookup</title></head><body>
+<div>Argument Dependent Lookup (or Koenig Lookup) is a concept that allows the C++ compiler to look for certain functions in certain namespaces, even though those functions were not referred to with their fully qualified names. Basically, if you call a function foo(argument), the compiler will not only look for free non-member non-friend functions “foo” in the current namespace, but also in the namespace of the type of the argument, if it differs from the current one. For example, the type of the argument may be Foo::bar (in namespace Foo), then the compiler will look for a (possibly) better-matching function foo in the namespace Foo, even though it was not asked for it. ADL enables this simple program:</div>
+<div><br/></div>
+<div>#include &lt;iostream&gt;</div>
+<div><br/></div>
+<div>int main(int argc, const char* argv[])</div>
+<div>{</div>
+<div>     std::cout &lt;&lt; “Hello World!”;</div>
+<div>}</div>
+<div><br/></div>
+<div>Here, &lt;&lt; is std::operator&lt;&lt;(std::ostream&amp;, &lt;something&gt;), a free function defined in the namespace std. Without ADL, you would have to call it explicitly like so:</div>
+<div><br/></div>
+<div>std::operator&lt;&lt;(std::cout, “Hello World");</div>
+<div><br/></div>
+<div>But ADL will look for such a function in the std namespace, because one of its arguments — std::cout — is <i>always</i> a member of that namespace (the other may be, too). Another example:</div>
+<div><br/></div>
+<div><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">namespace</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">ADL<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">struct</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">Container<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">* begin()<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">print</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #31595d">ln</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #43d34b">"!"</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">);<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">return</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">array;<br/>
+}<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">array [</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #f32300">5</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">];<br/>
+};<br/>
+}<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">main(</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">int</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">argc,</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">const</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">char</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">* argv[])<br/>
+{<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// Enable ADL!</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #e448ab">using</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">std</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::begin;<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">ADL</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">::</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #00a4e6">Container</span> <span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">c;<br/>
+<br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #848784">// Prints "!", even though we're not calling ADL::begin()!</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures"><br/></span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures; color: #3d1d81">begin</span><span style="font: 11.0px Menlo; font-variant-ligatures: no-common-ligatures">(c);</span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">}</span></span></div>
+</body></html>

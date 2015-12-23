@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="518"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-04-14 19:48:31 +0000"/><meta name="latitude" content="46.62854614266377"/><meta name="longitude" content="13.8244323729689"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-07-06 12:31:49 +0000"/><title>STL Item 5: Prefer range member functions over single-element methods</title></head><body>
+<div>As opposed to single-element insertion, assignment, erasure or other methods like this:</div>
+<div><br/></div>
+<div>std::copy(destination, begin, end, std::back_inserter(container));</div>
+<div><br/></div>
+<div>which repeatedly call the single-element insert(iterator, value) function, use range-based STL sequence methods:</div>
+<div><br/></div>
+<div>container.insert(destination, begin, end);</div>
+<div><br/></div>
+<div>These include:</div>
+<div><br/></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">// Constructs the container with the elements in the range from begin to end</span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">std::container&lt;T&gt;(begin, end);</span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;"><br/></span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;"><span style="font-size: 11px;"><span style="font-family: Menlo;">// Inserts the range from begin to end at destination</span></span><br/></span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">std::container&lt;T&gt;::insert(destination, begin, end);</span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;"><br/></span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">or</span></span></div>
+<div><br/></div>
+<div><font face="Menlo"><span style="font-size: 11px;">// Inserts </span><span style="font-size: 11px; line-height: 15px;">‘</span><span style="font-size: 11px;">value</span><span style="font-size: 11px; line-height: 15px;">’ ‘count’ times starting at the destination iterator</span></font></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">std::container&lt;T&gt;::insert(destination, count, value);</span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;"><br/></span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;"><span style="font-size: 11px;"><span style="font-family: Menlo;">// Sets the contents of the container to the range from begin to end</span></span><br/></span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">std::container&lt;T&gt;::assign(begin, end);</span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;"><br/></span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;"><span style="font-size: 11px;"><span style="font-family: Menlo;">// Erases the range from begin to end within the container</span></span><br/></span></span></div>
+<div><span style="font-size: 11px;"><span style="font-family: Menlo;">std::container&lt;T&gt;::erase(begin, end);</span></span></div>
+<div><br/></div>
+<div>Benefits include clarity of code, clarity of intent and three main performance bottleneck fixes:</div>
+<div><br/></div>
+<ol>
+<li>Reduced number of function calls, as only one call to the range based method occurs, where all the action happens at once, opposed to many individual function calls to the single-element methods</li>
+<li>Reduced move operations for elements of the container, as range-based methods will move all incumbent elements of the container to their final position (end - begin positions further up), while single-element methods will cause repeated move operations for each element every time the function is called</li>
+<li>Reduced allocations, as many contiguous-memory STL sequence containers allocate memory by doubling their capacity every time the size matches the capacity, so individual single-element methods could cause a maximum of log_2 N allocations (8 insertions on a container with size 1 = 3 new allocations), while range-based methods immediately allocate all the required memory for the operations</li>
+</ol>
+<div><br/></div>
+<div>All of the above improvements except for the function call reduction apply to all forward iterators or derived trait categories, but not to input or output iterators. Moreover, std::list is a node-based container, so move operations do not apply and elements are always allocated singly, but range-based methods may improve the assignment efficiency of node pointers (e.g. only one assignment of each input iterator’s next pointer, normally two, once when inserted to point to next item, another time when the next item is inserted to point to that item)</div>
+<div><br/></div>
+<div><br/></div>
+</body></html>

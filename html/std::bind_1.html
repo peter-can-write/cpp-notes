@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="exporter-version" content="Evernote Mac 6.3 (452849)"/><meta name="altitude" content="518"/><meta name="author" content="petergoldsborough@hotmail.com"/><meta name="created" content="2015-02-28 17:39:51 +0000"/><meta name="latitude" content="46.62858276367184"/><meta name="longitude" content="13.82443237304688"/><meta name="source" content="desktop.mac"/><meta name="updated" content="2015-02-28 17:39:59 +0000"/><title>std::bind</title></head><body>
+<div>
+<div><span style="font-family: 'Helvetica Neue';">To pass a member function where a function pointer is needed, you can use std::bind, which binds a method to an object.</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">class Foo{ void bar(); };</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">Foo foo;</span></div>
+<div><span style="font-family: 'Helvetica Neue';"><br/></span></div>
+<div><span style="font-family: 'Helvetica Neue';">// Calls Foo::bar and bind it to the foo object, since Foo::bar’s implicit parameter is an object, which is bound here.</span></div>
+<div><span style="font-family: 'Helvetica Neue';">std::sort(begin(), end(), std::bind(&amp;Foo::bar, foo));</span></div>
+</div>
+<div><br/></div>
+</body></html>
