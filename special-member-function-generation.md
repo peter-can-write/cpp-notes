@@ -42,7 +42,7 @@ function generation:
     define a move operation. Generation alongside user-defined
     copy-constructor or destructor deprecated.
 -   MOVE-CONSTRUCTOR: generated only for classes lacking
-    _any _explicitly declared _copy-operations, move-operations
+    _any _explicitly declared copy-operations, move-operations
     and destructors._ I.e. the presence of either the copy-constructor
     or copy-assignment-operator, a destructor or the accompanying
     move-operation, here the move-assignment operator, will cause the

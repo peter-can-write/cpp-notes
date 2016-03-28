@@ -27,5 +27,3 @@ Because std::forward removes the reference. Also works for variadic auto
 arguments:
 
 auto lambda = [] (auto&&... x) { f(std::forward<decltype(x)>(x)...); };
-
-
