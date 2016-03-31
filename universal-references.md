@@ -81,7 +81,8 @@ for reference collapsing are simple:
 > reference. Otherwise (i.e. if both are rvalue references), the result is an
 > rvalue reference.
 
-Basically, lvalues always dominate over rvalues. CV-qualifications do not matter.
+Basically, lvalues always dominate over rvalues. CV-qualifications do not matter
+(they just stay).
 
 In a table:
 
