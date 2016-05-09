@@ -158,3 +158,22 @@ async_packaged(Function&& function, Args&&... args) {
 	return future;
 }
 ```
+
+## Waiting for Futures
+
+One thing to mention here is that there exist two other ways of waiting for a
+future other than the plain `wait()`. These two are:
+
+1. `std::future::wait_for`, which waits for a given (`std::chrono`) duration.
+2. `std::future::wait_until`, which waits until a given (`std::chrono`)
+   time-point.
+
+Both of these methods return one of three codes upon finishing:
+
+1. `std::future_status::ready`: The future is ready.
+2. `std::future_status::timeout`: The future was not yet ready after waiting.
+3. `std::future_status::deferred`: The future is actually deferred and was not
+   yet started.
+
+Note that for (1) `std::chrono` literals are especially nice
+(`future.wait_for(100ns)`).
