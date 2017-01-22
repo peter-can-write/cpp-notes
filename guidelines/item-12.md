@@ -1,0 +1,9 @@
+# Know when and how to code for concurrency
+
+C++ is often used for highly parallelized applications. In such situations and when programming libraries that may be used under such circumstances, it is essential to understand concurrency and how to approach it. With the new C++ standard's concurrency model, this is now easier and better defined.
+
+The most basic question we must ask in concurrent programming is whether, when and how we share data. If we do share data, we must think of race conditions and techniques to avoid them, such as locking. There are three main ways to approach designing a system with respect to locking:
+
+1. External locking. Your code has no concept of concurrency and the user must perform any locking externally, on their own, if the object is intended to be shared across threads.
+2. Internal locking. Your code has locking built in. This is dangerous and requires a lot of foresight. First of all, you should make sure that your interface is tight and operations complete in themselves. In that case it is easier to say that a user will always want to lock this portion of code and, most importantly, only this portion. As soon as the user would want to synchronize access to two or more methods in your library, your design has failed as he/she would ideally use one lock across those calls. This makes the resulting code either unsafe or less efficient.
+3. Immutability or lock free-ness. The strongest concurrency guarantee you can give is that no matter how many thread access your code at the same time, there will never be race conditions. This is possible through a lock-free design or immutability altogether. When strings cannot be changed, for example, there is also no possibility that two threads could be performing changes on the same object, since any mutation would produce a new value on the stack of each thread.
